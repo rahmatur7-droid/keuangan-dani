@@ -1,0 +1,25 @@
+{
+  "name": "Keuangan Dani",
+  "short_name": "Keuangan Dani",
+  "description": "Pencatatan keuangan pribadi Keuangan Dani",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#070a0f",
+  "theme_color": "#070a0f",
+  "icons": [
+    {
+      "src": "icons/keuangan-dani-icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/keuangan-dani-icon-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
