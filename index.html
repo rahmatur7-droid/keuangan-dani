@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#080b10">
   <title>Keuangan Dani</title>
-  <meta name="app-version" content="V23-NAV-SCROLL-FIX">
+  <meta name="app-version" content="V25-PWA-HOME-SCREEN-FIX">
   <meta name="description" content="Pencatatan keuangan pribadi Keuangan Dani">
 
   <style>
@@ -2459,6 +2459,60 @@
         text-overflow:ellipsis !important;
       }
     }
+
+
+    /* V25 PWA: native-like Home Screen presentation + safe-area handling. */
+    .setup-overlay{
+      position:fixed;
+      inset:0;
+      z-index:1000;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      background:rgba(7,10,15,.96);
+    }
+    .setup-overlay.show{display:flex;}
+    .setup-card{
+      width:min(440px,100%);
+      padding:26px 22px 22px;
+      border:1px solid #2a333e;
+      border-radius:24px;
+      background:linear-gradient(180deg,#151b23,#0f141a);
+      box-shadow:0 24px 70px rgba(0,0,0,.45);
+    }
+    .setup-card h2{margin:0 0 12px;font-size:24px;line-height:1.15;color:#f3f5f7;}
+    .setup-card p{margin:0 0 16px;color:#aeb7c1;font-size:15px;line-height:1.5;}
+    .setup-card input{
+      width:100%;height:52px;padding:0 14px;border-radius:12px;
+      border:1px solid #303944;background:#0f151c;color:#f3f5f7;
+      outline:none;font-size:16px;
+    }
+    .setup-card button{
+      width:100%;height:52px;margin-top:10px;border:0;border-radius:12px;
+      background:linear-gradient(145deg,#365b94,#294b7c);color:#fff;font-size:16px;font-weight:600;
+    }
+    .setup-card .setup-note{margin-top:14px;margin-bottom:0;font-size:12px;color:#7f8995;}
+
+    @media (display-mode:standalone){
+      html,body{background:#070a0f;min-height:100%;overflow-x:hidden;}
+      body{padding-top:0;}
+      .app{
+        min-height:100svh;
+        padding-top:calc(24px + env(safe-area-inset-top)) !important;
+        padding-bottom:calc(28px + env(safe-area-inset-bottom)) !important;
+      }
+      .setup-overlay{
+        padding-top:calc(24px + env(safe-area-inset-top));
+        padding-bottom:calc(24px + env(safe-area-inset-bottom));
+      }
+    }
+
+    /* iOS standalone also reports this legacy media query. */
+    @media (display-mode:standalone), (-webkit-display-mode:standalone){
+      .home-topbar{padding-top:0 !important;}
+    }
+
 </style>
 
   <!-- Keuangan Dani - V20 static web app -->
@@ -2467,7 +2521,7 @@
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-title" content="Keuangan Dani">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="mobile-web-app-capable" content="yes">
 </head>
 
