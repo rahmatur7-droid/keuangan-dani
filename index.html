@@ -1,0 +1,3147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#080b10">
+  <title>Keuangan Dani</title>
+  <meta name="description" content="Pencatatan keuangan pribadi Keuangan Dani">
+
+  <style>
+    /* V17: all transaction icons are inline SVG outline icons; no emoji/icon fonts. */
+    :root{
+      --bg:#070a0f;
+      --surface:#11161d;
+      --surface-2:#171d25;
+      --surface-3:#202731;
+      --border:#2a323d;
+      --text:#f3f5f7;
+      --muted:#8f99a6;
+      --blue:#527fc8;
+      --blue-2:#315b9e;
+      --green:#65b987;
+      --red:#df7777;
+      --gold:#b99a68;
+      --radius:18px;
+      --shadow:0 14px 40px rgba(0,0,0,.28);
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,Segoe UI,sans-serif}
+    body{min-height:100vh}
+
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+
+    .app{
+      width:100%;
+      max-width:none;
+      min-height:100vh;
+      margin:0 auto;
+      padding:18px 16px calc(105px + env(safe-area-inset-bottom));
+      background:
+        radial-gradient(circle at 50% -10%,rgba(66,91,126,.20),transparent 38%),
+        linear-gradient(180deg,#0a0e14 0%,#080b10 100%);
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin:4px 2px 18px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:16px;
+      font-weight:600;
+      letter-spacing:.1px;
+    }
+
+    .brand-icon{
+      width:28px;height:28px;border-radius:50%;
+      display:grid;place-items:center;
+      background:linear-gradient(145deg,#343b45,#10151c);
+      border:1px solid #3a424e;
+      color:#dce1e6;font-size:13px;
+    }
+
+    .date-label{
+      color:#aeb6c0;
+      font-size:13px;
+      white-space:nowrap;
+    }
+
+    .balance-card{
+      background:linear-gradient(145deg,#151b23,#10151c);
+      border:1px solid #242c36;
+      border-radius:22px;
+      padding:23px 14px 16px;
+      box-shadow:var(--shadow);
+    }
+
+    .balance-label{text-align:center;color:#d2d7dd;font-size:13px}
+    .balance{
+      text-align:center;
+      font-size:34px;
+      line-height:1.15;
+      font-weight:500;
+      letter-spacing:-1px;
+      margin:6px 0 5px;
+    }
+    .balance-change{
+      text-align:center;
+      color:var(--green);
+      font-size:13px;
+      margin-bottom:14px;
+    }
+
+    .segmented{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      padding:3px;
+      border-radius:11px;
+      background:#252b33;
+    }
+
+    .segmented button{
+      border:0;
+      background:transparent;
+      color:#8c949e;
+      padding:8px 8px;
+      border-radius:8px;
+      font-size:13px;
+    }
+
+    .segmented button.active{
+      color:#f1f3f5;
+      background:#151a21;
+      box-shadow:0 2px 8px rgba(0,0,0,.22);
+    }
+
+    .chart-card{
+      margin-top:12px;
+      padding:16px 12px 11px;
+      border-radius:18px;
+      background:rgba(19,25,33,.88);
+      border:1px solid #242c35;
+    }
+
+    .chart-head{
+      display:flex;
+      justify-content:flex-end;
+      color:#aeb5bf;
+      font-size:11px;
+      margin-bottom:4px;
+    }
+
+    .chart-amount{
+      text-align:right;
+      font-size:14px;
+      margin-bottom:8px;
+    }
+
+    .bars{
+      height:104px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-around;
+      gap:8px;
+      padding:4px 4px 0;
+    }
+
+    .bar-col{
+      flex:1;
+      max-width:38px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-end;
+      height:100%;
+      gap:5px;
+    }
+
+    .bar{
+      width:100%;
+      min-height:7px;
+      border-radius:5px 5px 3px 3px;
+      background:#647fa8;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .bar-label{font-size:9px;color:#7f8894}
+
+    .section-title{
+      font-size:17px;
+      font-weight:500;
+      margin:22px 2px 10px;
+    }
+
+    .transactions{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+
+    .transaction{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:11px 3px;
+      border-bottom:1px solid rgba(50,58,68,.55);
+    }
+
+    .tx-icon{
+      width:38px;height:38px;border-radius:12px;
+      display:grid;place-items:center;
+      background:#1b222a;
+      border:1px solid #29323c;
+      font-size:18px;
+      flex:0 0 auto;
+    }
+
+    .tx-main{min-width:0;flex:1}
+    .tx-name{
+      font-size:14px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .tx-date{font-size:10px;color:#7f8995;margin-top:3px}
+    .tx-right{text-align:right;flex:0 0 auto}
+    .tx-amount{font-size:13px}
+    .tx-amount.income{color:var(--green)}
+    .tx-amount.expense{color:#dfe3e7}
+    .tx-actions{margin-top:5px;display:flex;gap:5px;justify-content:flex-end}
+    .mini-btn{
+      border:0;background:transparent;color:#76808c;font-size:10px;padding:2px 0;
+    }
+    .mini-btn:hover{color:#fff}
+
+    .empty{
+      text-align:center;
+      padding:25px 10px;
+      color:#727d89;
+      font-size:13px;
+    }
+
+    .bottom-nav{
+      position:fixed;
+      z-index:20;
+      left:0;
+      bottom:0;
+      transform:none;
+      width:100%;
+      padding:9px 13px calc(9px + env(safe-area-inset-bottom));
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background:rgba(11,15,21,.93);
+      border-top:1px solid #222a34;
+      backdrop-filter:blur(18px);
+    }
+
+    .nav-btn{
+      border:0;background:transparent;color:#8a949f;
+      min-width:70px;padding:5px 7px;
+      display:flex;flex-direction:column;align-items:center;gap:3px;
+      font-size:10px;
+    }
+    .nav-btn.active{color:#f3f5f7}
+    .nav-icon{font-size:18px}
+
+    .add-nav{
+      border:1px solid #31496c;
+      background:linear-gradient(145deg,#233957,#182b45);
+      color:#eaf1ff;
+      border-radius:20px;
+      padding:10px 17px;
+      font-size:13px;
+      box-shadow:0 6px 18px rgba(31,61,105,.24);
+    }
+
+    /* Modal / form */
+    .modal{
+      position:fixed;
+      inset:0;
+      z-index:50;
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      background:rgba(0,0,0,.66);
+      backdrop-filter:blur(7px);
+    }
+    .modal.show{display:flex}
+
+    .sheet{
+      width:100%;
+      max-height:94vh;
+      overflow:auto;
+      background:linear-gradient(180deg,#141a21,#0e1319);
+      border:1px solid #2a333e;
+      border-bottom:0;
+      border-radius:25px 25px 0 0;
+      padding:12px 16px calc(18px + env(safe-area-inset-bottom));
+      box-shadow:0 -20px 60px rgba(0,0,0,.42);
+    }
+
+    .handle{
+      width:40px;height:4px;border-radius:10px;
+      background:#58616c;margin:0 auto 15px;
+    }
+
+    .form-head{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-bottom:14px;
+    }
+    .form-title{font-size:16px;font-weight:500}
+    .close{
+      width:31px;height:31px;border-radius:50%;
+      border:1px solid #303944;background:#1b222a;color:#b9c0c8;
+    }
+
+    .field{margin-bottom:14px}
+    .label{display:block;color:#d7dce1;font-size:13px;margin-bottom:7px}
+
+    .control{
+      width:100%;
+      min-height:45px;
+      padding:0 12px;
+      color:#f0f2f4;
+      background:#151b22;
+      border:1px solid #303944;
+      border-radius:10px;
+      outline:none;
+    }
+    .control:focus{border-color:#527fc8;box-shadow:0 0 0 2px rgba(82,127,200,.12)}
+    textarea.control{padding:11px 12px;min-height:72px;resize:vertical}
+    select.control{
+      appearance:none;
+      -webkit-appearance:none;
+      padding-right:35px;
+      background-image:
+        linear-gradient(45deg,transparent 50%,#8f99a6 50%),
+        linear-gradient(135deg,#8f99a6 50%,transparent 50%);
+      background-position:calc(100% - 17px) 19px,calc(100% - 12px) 19px;
+      background-size:5px 5px,5px 5px;
+      background-repeat:no-repeat;
+    }
+
+    .type-switch{
+      display:grid;grid-template-columns:1fr 1fr;
+      padding:3px;border-radius:10px;background:#242b33;
+    }
+    .type-switch button{
+      border:0;background:transparent;color:#8e97a2;padding:9px;border-radius:8px;font-size:13px;
+    }
+    .type-switch button.active{background:#414750;color:#f3f5f7}
+
+    .category-grid,.method-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+    }
+
+    .choice{
+      min-height:64px;
+      padding:7px 5px;
+      border:1px solid #303944;
+      border-radius:11px;
+      background:#171d24;
+      color:#c5cbd1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:5px;
+      font-size:11px;
+    }
+    .choice .emoji{font-size:21px;line-height:1}
+    .choice.selected{
+      background:linear-gradient(145deg,#4b3e2e,#2f2a24);
+      border-color:#8c7351;
+      color:#f5f1e9;
+    }
+    .choice.bank.selected{background:linear-gradient(145deg,#293e58,#1d2e43);border-color:#547eb2}
+    .choice.wallet.selected{background:linear-gradient(145deg,#4b4030,#30291f);border-color:#917653}
+    .choice.cash.selected{background:linear-gradient(145deg,#263e35,#1d3029);border-color:#4f856e}
+
+    .money-wrap{position:relative}
+    .money-prefix{
+      position:absolute;left:13px;top:13px;color:#808a96;font-size:14px;pointer-events:none
+    }
+    #nominal{padding-left:38px;font-size:16px}
+
+    .save-btn{
+      width:100%;
+      min-height:48px;
+      border:1px solid #3e659c;
+      border-radius:11px;
+      background:linear-gradient(145deg,#365b94,#294b7c);
+      color:#fff;
+      font-weight:500;
+      box-shadow:0 8px 20px rgba(35,70,119,.25);
+    }
+    .save-btn:disabled{opacity:.6}
+
+    .cancel-edit{
+      display:none;
+      width:100%;
+      margin-top:8px;
+      min-height:42px;
+      border:1px solid #303944;
+      border-radius:10px;
+      background:#171d24;
+      color:#aab2bc;
+    }
+
+    .toast{
+      position:fixed;
+      z-index:100;
+      left:50%;
+      bottom:90px;
+      transform:translate(-50%,15px);
+      opacity:0;
+      pointer-events:none;
+      padding:11px 15px;
+      border-radius:12px;
+      background:#252c35;
+      border:1px solid #39434f;
+      color:#f2f4f6;
+      font-size:12px;
+      transition:.22s ease;
+      box-shadow:var(--shadow);
+      white-space:nowrap;
+    }
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+
+    .loading{opacity:.55;pointer-events:none}
+
+    /* Full-screen touch layout (including iPhone Desktop Website mode). */
+    @media (pointer:coarse){
+      html,body{
+        width:100%;
+        min-width:100%;
+        -webkit-text-size-adjust:100%;
+      }
+      .app{
+        width:100%;
+        max-width:none;
+        min-height:100svh;
+        padding-left:max(16px, env(safe-area-inset-left));
+        padding-right:max(16px, env(safe-area-inset-right));
+      }
+      .bottom-nav{
+        padding-left:max(13px, env(safe-area-inset-left));
+        padding-right:max(13px, env(safe-area-inset-right));
+      }
+      .sheet{
+        width:100%;
+        max-width:none;
+        padding-left:max(16px, env(safe-area-inset-left));
+        padding-right:max(16px, env(safe-area-inset-right));
+      }
+    }
+
+    /* iPhone / touch readability: keep the full-screen layout, but enlarge
+       typography, controls, icons and touch targets to match a comfortable
+       native-app scale. */
+    @media (pointer:coarse){
+      .topbar{
+        padding-top:6px;
+        padding-bottom:8px;
+      }
+      .brand{
+        font-size:17px;
+        gap:10px;
+      }
+      .brand-icon{
+        width:30px;
+        height:30px;
+        font-size:15px;
+      }
+      .date-label{
+        font-size:13px;
+      }
+
+      .balance-card{
+        padding:24px 18px 16px;
+        border-radius:20px;
+      }
+      .balance-label{
+        font-size:14px;
+      }
+      .balance{
+        font-size:31px;
+        line-height:1.15;
+        margin:5px 0 4px;
+      }
+      .balance-change{
+        font-size:13px;
+      }
+      .segmented{
+        margin-top:14px;
+        padding:3px;
+        border-radius:11px;
+      }
+      .segmented button{
+        min-height:38px;
+        font-size:13px;
+      }
+
+      .chart-card{
+        padding:18px 16px 12px;
+        min-height:155px;
+        border-radius:20px;
+      }
+      .chart-head,.chart-amount{
+        font-size:13px;
+      }
+      .section-title{
+        font-size:18px;
+        margin-top:22px;
+      }
+
+      .transaction{
+        gap:13px;
+        padding:14px 3px;
+      }
+      .tx-icon{
+        width:44px;
+        height:44px;
+        border-radius:13px;
+        font-size:21px;
+      }
+      .tx-name{
+        font-size:16px;
+      }
+      .tx-date{
+        font-size:12px;
+        margin-top:4px;
+      }
+      .tx-amount{
+        font-size:15px;
+      }
+      .mini-btn{
+        font-size:12px;
+        padding:3px 2px;
+      }
+
+      .bottom-nav{
+        min-height:78px;
+        padding-top:10px;
+        padding-bottom:calc(10px + env(safe-area-inset-bottom));
+        gap:12px;
+      }
+      .nav-btn{
+        min-width:88px;
+        min-height:54px;
+        padding:5px 8px;
+        gap:4px;
+        font-size:12px;
+      }
+      .nav-icon{
+        font-size:28px;
+        line-height:27px;
+        font-weight:500;
+      }
+      .add-nav{
+        min-height:48px;
+        padding:11px 20px;
+        border-radius:24px;
+        font-size:15px;
+        font-weight:500;
+      }
+
+      .sheet{
+        max-height:96svh;
+        padding-top:14px;
+        padding-bottom:calc(22px + env(safe-area-inset-bottom));
+      }
+      .handle{
+        width:46px;
+        height:5px;
+        margin-bottom:18px;
+      }
+      .form-title{
+        font-size:20px;
+        font-weight:600;
+      }
+      .close{
+        width:38px;
+        height:38px;
+        font-size:18px;
+      }
+      .field{
+        margin-bottom:17px;
+      }
+      .label{
+        font-size:15px;
+        margin-bottom:8px;
+      }
+      .control{
+        min-height:50px;
+        font-size:16px;
+      }
+      .type-switch button{
+        min-height:48px;
+        font-size:15px;
+      }
+      .category-grid,.method-grid{
+        gap:9px;
+      }
+      .category-grid button,.method-grid button{
+        min-height:56px;
+        font-size:14px;
+      }
+      #nominal{
+        min-height:54px;
+        font-size:18px;
+      }
+      .money-prefix{
+        top:15px;
+        font-size:16px;
+      }
+      textarea.control{
+        min-height:96px;
+        padding-top:14px;
+      }
+      .save-btn{
+        min-height:54px;
+        font-size:16px;
+        border-radius:13px;
+      }
+      .cancel-edit{
+        min-height:48px;
+        font-size:15px;
+      }
+      .toast{
+        bottom:105px;
+        font-size:14px;
+        padding:13px 17px;
+      }
+    }
+
+    /* iPhone readability V2: stronger native-app sizing. */
+    @media (pointer:coarse){
+      html{font-size:18px !important;}
+      body{font-size:18px !important;}
+
+      .app{
+        padding-left:max(18px,env(safe-area-inset-left)) !important;
+        padding-right:max(18px,env(safe-area-inset-right)) !important;
+      }
+
+      .topbar{
+        min-height:52px;
+        padding-top:8px !important;
+        padding-bottom:10px !important;
+      }
+      .brand{font-size:20px !important;gap:11px !important;}
+      .brand-icon{width:34px !important;height:34px !important;font-size:17px !important;}
+      .date-label{font-size:15px !important;}
+
+      .balance-card{
+        padding:26px 20px 18px !important;
+        border-radius:22px !important;
+      }
+      .balance-label{font-size:16px !important;}
+      .balance{
+        font-size:36px !important;
+        font-weight:500 !important;
+        margin:6px 0 5px !important;
+      }
+      .balance-change{font-size:15px !important;}
+      .segmented{margin-top:17px !important;padding:4px !important;}
+      .segmented button{
+        min-height:46px !important;
+        font-size:15px !important;
+      }
+
+      .chart-card{
+        min-height:178px !important;
+        padding:20px 18px 14px !important;
+        border-radius:22px !important;
+      }
+      .chart-head,.chart-amount{font-size:15px !important;}
+
+      .section-title{
+        font-size:21px !important;
+        font-weight:600 !important;
+        margin:25px 2px 12px !important;
+      }
+
+      .transaction{
+        gap:15px !important;
+        padding:17px 3px !important;
+        min-height:76px;
+      }
+      .tx-icon{
+        width:50px !important;
+        height:50px !important;
+        border-radius:15px !important;
+        font-size:24px !important;
+      }
+      .tx-name{font-size:18px !important;}
+      .tx-date{font-size:13px !important;margin-top:5px !important;}
+      .tx-amount{font-size:16px !important;}
+      .tx-actions{margin-top:6px !important;gap:8px !important;}
+      .mini-btn{font-size:13px !important;padding:4px 2px !important;}
+
+      .bottom-nav{
+        min-height:92px !important;
+        padding-top:11px !important;
+        padding-bottom:calc(11px + env(safe-area-inset-bottom)) !important;
+        gap:14px !important;
+      }
+      .nav-btn{
+        min-width:100px !important;
+        min-height:66px !important;
+        padding:6px 10px !important;
+        gap:5px !important;
+        font-size:14px !important;
+        font-weight:500 !important;
+      }
+      .nav-icon{
+        font-size:32px !important;
+        line-height:32px !important;
+      }
+      .add-nav{
+        min-height:56px !important;
+        padding:13px 24px !important;
+        border-radius:28px !important;
+        font-size:17px !important;
+        font-weight:600 !important;
+      }
+
+      .sheet{
+        max-height:97svh !important;
+        padding:16px 20px calc(24px + env(safe-area-inset-bottom)) !important;
+      }
+      .form-title{font-size:23px !important;font-weight:600 !important;}
+      .label{font-size:17px !important;margin-bottom:9px !important;}
+      .field{margin-bottom:19px !important;}
+      .control{
+        min-height:56px !important;
+        font-size:18px !important;
+      }
+      .type-switch button{
+        min-height:54px !important;
+        font-size:17px !important;
+      }
+      .category-grid,.method-grid{gap:10px !important;}
+      .category-grid button,.method-grid button{
+        min-height:64px !important;
+        font-size:16px !important;
+      }
+      #nominal{
+        min-height:60px !important;
+        font-size:20px !important;
+      }
+      .money-prefix{top:17px !important;font-size:18px !important;}
+      textarea.control{
+        min-height:110px !important;
+        font-size:18px !important;
+      }
+      .save-btn{
+        min-height:60px !important;
+        font-size:18px !important;
+        border-radius:14px !important;
+      }
+      .cancel-edit{
+        min-height:54px !important;
+        font-size:17px !important;
+      }
+      .toast{
+        bottom:120px !important;
+        font-size:16px !important;
+        padding:14px 18px !important;
+      }
+    }
+
+    /* Desktop only: compact centered card. Touch devices stay full-screen,
+       even when iOS is using a desktop-style viewport. */
+    @media (min-width:700px) and (pointer:fine){
+      body{padding:24px 0}
+      .app{
+        width:100%;
+        max-width:480px;
+        min-height:calc(100vh - 48px);
+        border:1px solid #202832;
+        border-radius:28px;
+        box-shadow:0 25px 80px rgba(0,0,0,.35);
+      }
+      .bottom-nav{
+        left:50%;
+        transform:translateX(-50%);
+        width:min(480px,calc(100% - 32px));
+        bottom:24px;
+        border:1px solid #252e39;
+        border-radius:18px;
+      }
+      .modal{align-items:center}
+      .sheet{width:min(480px,100%);border:1px solid #303944;border-radius:24px;max-height:90vh}
+    }
+  
+    /* =========================================================
+       iPhone UI V3 — larger native-app scale + lifted bottom nav
+       ========================================================= */
+    @media (pointer:coarse){
+      body{
+        font-size:18px !important;
+        -webkit-text-size-adjust:100%;
+      }
+
+      /* Main/header */
+      .topbar{
+        padding:12px 0 14px !important;
+        min-height:64px !important;
+      }
+      .brand{
+        font-size:21px !important;
+        font-weight:600 !important;
+        gap:12px !important;
+      }
+      .brand-icon{
+        width:38px !important;
+        height:38px !important;
+        font-size:19px !important;
+      }
+      .date-label{
+        font-size:15px !important;
+        font-weight:500 !important;
+      }
+
+      /* Balance */
+      .balance-card{
+        padding:28px 22px 20px !important;
+        border-radius:22px !important;
+      }
+      .balance-label{
+        font-size:16px !important;
+      }
+      .balance{
+        font-size:38px !important;
+        line-height:1.15 !important;
+        margin:7px 0 5px !important;
+      }
+      .balance-change{
+        font-size:15px !important;
+      }
+      .segmented{
+        margin-top:18px !important;
+        padding:4px !important;
+        border-radius:12px !important;
+      }
+      .segmented button{
+        min-height:48px !important;
+        font-size:15px !important;
+        font-weight:500 !important;
+      }
+
+      /* Chart */
+      .chart-card{
+        min-height:190px !important;
+        padding:22px 20px 16px !important;
+        border-radius:22px !important;
+      }
+      .chart-head,.chart-amount{
+        font-size:15px !important;
+      }
+      .bar-label{
+        font-size:11px !important;
+      }
+
+      /* Transaction list */
+      .section-title{
+        font-size:21px !important;
+        font-weight:600 !important;
+        margin:27px 2px 13px !important;
+      }
+      .transaction{
+        gap:16px !important;
+        padding:18px 4px !important;
+        min-height:82px !important;
+      }
+      .tx-icon{
+        width:54px !important;
+        height:54px !important;
+        border-radius:16px !important;
+        font-size:26px !important;
+      }
+      .tx-name{
+        font-size:18px !important;
+        font-weight:500 !important;
+      }
+      .tx-date{
+        font-size:13px !important;
+        margin-top:5px !important;
+      }
+      .tx-amount{
+        font-size:16px !important;
+        font-weight:500 !important;
+      }
+      .tx-actions{
+        margin-top:7px !important;
+        gap:9px !important;
+      }
+      .mini-btn{
+        font-size:13px !important;
+        padding:4px 2px !important;
+      }
+
+      /* Bottom navigation: lift it from the physical screen edge */
+      .bottom-nav{
+        left:14px !important;
+        right:14px !important;
+        bottom:calc(12px + env(safe-area-inset-bottom)) !important;
+        width:auto !important;
+        min-height:82px !important;
+        padding:9px 12px !important;
+        gap:10px !important;
+        border:1px solid #27313d !important;
+        border-radius:20px !important;
+        background:rgba(11,15,21,.97) !important;
+        box-shadow:0 8px 28px rgba(0,0,0,.42) !important;
+      }
+      .nav-btn{
+        min-width:96px !important;
+        min-height:62px !important;
+        padding:6px 10px !important;
+        gap:4px !important;
+        font-size:14px !important;
+        font-weight:500 !important;
+      }
+      .nav-icon{
+        font-size:32px !important;
+        line-height:32px !important;
+      }
+      .add-nav{
+        min-height:56px !important;
+        padding:13px 24px !important;
+        border-radius:28px !important;
+        font-size:17px !important;
+        font-weight:600 !important;
+        white-space:nowrap !important;
+      }
+
+      /* Add transaction sheet */
+      .sheet{
+        max-height:97svh !important;
+        padding:18px 20px calc(28px + env(safe-area-inset-bottom)) !important;
+        border-radius:28px 28px 0 0 !important;
+      }
+      .handle{
+        width:48px !important;
+        height:5px !important;
+        margin-bottom:20px !important;
+      }
+      .form-head{
+        margin-bottom:18px !important;
+      }
+      .form-title{
+        font-size:23px !important;
+        font-weight:600 !important;
+      }
+      .close{
+        width:40px !important;
+        height:40px !important;
+        font-size:19px !important;
+      }
+      .field{
+        margin-bottom:20px !important;
+      }
+      .label{
+        font-size:17px !important;
+        margin-bottom:9px !important;
+      }
+      .control{
+        min-height:58px !important;
+        padding:0 14px !important;
+        font-size:18px !important;
+        border-radius:12px !important;
+      }
+      .type-switch{
+        padding:4px !important;
+        border-radius:12px !important;
+      }
+      .type-switch button{
+        min-height:52px !important;
+        padding:10px !important;
+        border-radius:9px !important;
+        font-size:17px !important;
+      }
+      .category-grid,.method-grid{
+        gap:10px !important;
+      }
+      .choice{
+        min-height:78px !important;
+        padding:9px 6px !important;
+        gap:7px !important;
+        border-radius:13px !important;
+        font-size:14px !important;
+      }
+      .choice .emoji{
+        font-size:27px !important;
+      }
+      #nominal{
+        min-height:62px !important;
+        font-size:21px !important;
+      }
+      .money-prefix{
+        top:18px !important;
+        font-size:18px !important;
+      }
+      textarea.control{
+        min-height:112px !important;
+        padding:14px !important;
+        font-size:18px !important;
+      }
+      .save-btn{
+        min-height:62px !important;
+        font-size:18px !important;
+        font-weight:600 !important;
+        border-radius:14px !important;
+      }
+      .cancel-edit{
+        min-height:56px !important;
+        font-size:17px !important;
+      }
+      .toast{
+        bottom:125px !important;
+        font-size:16px !important;
+        padding:14px 18px !important;
+      }
+    }
+
+\n    /* =========================================================\n       iPhone FINAL — readable scale + no input auto-zoom + lifted nav\n       ========================================================= */\n    @media (pointer:coarse){\n      html, body{\n        -webkit-text-size-adjust:100% !important;\n        text-size-adjust:100% !important;\n        touch-action:manipulation;\n      }\n      input, textarea, select, button{\n        -webkit-tap-highlight-color:transparent;\n      }\n      input, textarea, select{\n        font-size:18px !important;\n      }\n\n      .app{\n        padding:24px 18px 145px !important;\n      }\n      .topbar{\n        min-height:70px !important;\n        margin:2px 0 20px !important;\n      }\n      .brand{font-size:23px !important;gap:13px !important;}\n      .brand-icon{width:42px !important;height:42px !important;font-size:21px !important;}\n      .date-label{font-size:17px !important;}\n\n      .balance-card{\n        padding:32px 24px 23px !important;\n        border-radius:24px !important;\n      }\n      .balance-label{font-size:18px !important;}\n      .balance{font-size:46px !important;letter-spacing:-1.4px !important;margin:8px 0 6px !important;}\n      .balance-change{font-size:17px !important;margin-bottom:17px !important;}\n      .segmented{padding:5px !important;border-radius:13px !important;}\n      .segmented button{min-height:52px !important;font-size:17px !important;border-radius:10px !important;}\n\n      .chart-card{\n        margin-top:15px !important;\n        min-height:215px !important;\n        padding:25px 22px 18px !important;\n        border-radius:24px !important;\n      }\n      .chart-head,.chart-amount{font-size:17px !important;}\n      .bars{height:128px !important;gap:10px !important;}\n      .bar-col{max-width:48px !important;gap:7px !important;}\n      .bar-label{font-size:12px !important;}\n\n      .section-title{font-size:24px !important;margin:30px 2px 14px !important;}\n      .transaction{gap:18px !important;padding:20px 4px !important;min-height:94px !important;}\n      .tx-icon{width:60px !important;height:60px !important;border-radius:17px !important;font-size:29px !important;}\n      .tx-name{font-size:20px !important;font-weight:500 !important;}\n      .tx-date{font-size:14px !important;margin-top:6px !important;}\n      .tx-amount{font-size:18px !important;font-weight:500 !important;}\n      .tx-actions{margin-top:8px !important;gap:10px !important;}\n      .mini-btn{font-size:14px !important;padding:4px 2px !important;}\n\n      /* Floating bottom bar: clearly lifted from the bottom edge. */\n      .bottom-nav{\n        left:14px !important;right:14px !important;bottom:18px !important;width:auto !important;\n        min-height:92px !important;padding:10px 14px !important;gap:10px !important;\n        border:1px solid #303b48 !important;border-radius:24px !important;\n        background:rgba(10,14,20,.98) !important;\n        box-shadow:0 10px 30px rgba(0,0,0,.50) !important;\n      }\n      .nav-btn{min-width:105px !important;min-height:70px !important;padding:7px 10px !important;gap:5px !important;font-size:16px !important;}\n      .nav-icon{font-size:38px !important;line-height:36px !important;}\n      .add-nav{min-height:62px !important;padding:14px 25px !important;border-radius:31px !important;font-size:18px !important;font-weight:600 !important;}\n\n      /* Form: large enough for touch, but input text stays >=16px to prevent iOS zoom. */\n      .sheet{max-height:96svh !important;padding:20px 22px calc(30px + env(safe-area-inset-bottom)) !important;border-radius:30px 30px 0 0 !important;}\n      .handle{width:52px !important;height:6px !important;margin-bottom:22px !important;}\n      .form-head{margin-bottom:20px !important;}\n      .form-title{font-size:25px !important;}\n      .close{width:44px !important;height:44px !important;font-size:20px !important;}\n      .field{margin-bottom:22px !important;}\n      .label{font-size:18px !important;margin-bottom:10px !important;}\n      .control{min-height:62px !important;padding:0 16px !important;font-size:18px !important;border-radius:13px !important;}\n      .type-switch{padding:5px !important;border-radius:13px !important;}\n      .type-switch button{min-height:56px !important;font-size:18px !important;border-radius:10px !important;}\n      .category-grid,.method-grid{grid-template-columns:repeat(3,minmax(0,1fr)) !important;gap:11px !important;}\n      .choice{min-height:82px !important;padding:9px 5px !important;border-radius:14px !important;gap:7px !important;font-size:15px !important;}\n      .choice .emoji{font-size:29px !important;}\n      #nominal{min-height:64px !important;font-size:18px !important;}\n      .money-prefix{top:19px !important;font-size:18px !important;}\n      textarea.control{min-height:120px !important;padding:15px 16px !important;font-size:18px !important;}\n      .save-btn{min-height:64px !important;font-size:19px !important;border-radius:15px !important;}\n      .cancel-edit{min-height:58px !important;font-size:18px !important;}\n      .toast{bottom:130px !important;font-size:17px !important;padding:15px 20px !important;}\n    }\n
+
+
+    /* =========================================================
+       iPhone FINAL V5 — reference-scale UI
+       Intentionally larger native-app proportions + higher bottom nav.
+       ========================================================= */
+    @media (pointer:coarse){
+      html,body{
+        -webkit-text-size-adjust:100% !important;
+        text-size-adjust:100% !important;
+      }
+
+      /* ---------- HOME ---------- */
+      .app{
+        padding:26px 18px 175px !important;
+      }
+      .topbar{
+        min-height:76px !important;
+        margin:2px 0 22px !important;
+      }
+      .brand{
+        font-size:25px !important;
+        font-weight:600 !important;
+        gap:14px !important;
+      }
+      .brand-icon{
+        width:44px !important;
+        height:44px !important;
+        font-size:22px !important;
+      }
+      .date-label{
+        font-size:18px !important;
+        font-weight:500 !important;
+      }
+
+      .balance-card{
+        padding:36px 24px 25px !important;
+        border-radius:26px !important;
+      }
+      .balance-label{
+        font-size:19px !important;
+      }
+      .balance{
+        font-size:52px !important;
+        line-height:1.12 !important;
+        letter-spacing:-1.8px !important;
+        margin:9px 0 7px !important;
+      }
+      .balance-change{
+        font-size:18px !important;
+        margin-bottom:19px !important;
+      }
+      .segmented{
+        padding:6px !important;
+        border-radius:14px !important;
+      }
+      .segmented button{
+        min-height:56px !important;
+        font-size:18px !important;
+        border-radius:11px !important;
+      }
+
+      .chart-card{
+        margin-top:17px !important;
+        min-height:235px !important;
+        padding:28px 22px 20px !important;
+        border-radius:26px !important;
+      }
+      .chart-head,.chart-amount{
+        font-size:18px !important;
+      }
+      .chart-amount{
+        margin-bottom:12px !important;
+      }
+      .bars{
+        height:148px !important;
+        gap:11px !important;
+        padding-top:6px !important;
+      }
+      .bar-col{
+        max-width:52px !important;
+        gap:8px !important;
+      }
+      .bar-label{
+        font-size:13px !important;
+      }
+
+      .section-title{
+        font-size:26px !important;
+        font-weight:600 !important;
+        margin:32px 2px 15px !important;
+      }
+      .transaction{
+        gap:19px !important;
+        padding:21px 4px !important;
+        min-height:100px !important;
+      }
+      .tx-icon{
+        width:64px !important;
+        height:64px !important;
+        border-radius:18px !important;
+        font-size:31px !important;
+      }
+      .tx-name{
+        font-size:21px !important;
+        font-weight:500 !important;
+      }
+      .tx-date{
+        font-size:15px !important;
+        margin-top:6px !important;
+      }
+      .tx-amount{
+        font-size:19px !important;
+        font-weight:500 !important;
+      }
+      .tx-actions{
+        margin-top:8px !important;
+        gap:11px !important;
+      }
+      .mini-btn{
+        font-size:15px !important;
+        padding:4px 2px !important;
+      }
+
+      /* ---------- BOTTOM NAV ---------- */
+      .bottom-nav{
+        left:14px !important;
+        right:14px !important;
+        bottom:calc(30px + env(safe-area-inset-bottom)) !important;
+        width:auto !important;
+        min-height:100px !important;
+        padding:11px 14px !important;
+        gap:12px !important;
+        border:1px solid #34404d !important;
+        border-radius:26px !important;
+        background:rgba(10,14,20,.98) !important;
+        box-shadow:0 12px 34px rgba(0,0,0,.52) !important;
+      }
+      .nav-btn{
+        min-width:112px !important;
+        min-height:76px !important;
+        padding:7px 10px !important;
+        gap:5px !important;
+        font-size:16px !important;
+        font-weight:600 !important;
+      }
+      .nav-icon{
+        font-size:42px !important;
+        line-height:40px !important;
+      }
+      .add-nav{
+        min-height:66px !important;
+        padding:15px 27px !important;
+        border-radius:33px !important;
+        font-size:19px !important;
+        font-weight:600 !important;
+      }
+
+      /* ---------- ADD / EDIT TRANSACTION ---------- */
+      .sheet{
+        max-height:97svh !important;
+        padding:22px 22px calc(34px + env(safe-area-inset-bottom)) !important;
+        border-radius:32px 32px 0 0 !important;
+      }
+      .handle{
+        width:54px !important;
+        height:6px !important;
+        margin-bottom:24px !important;
+      }
+      .form-head{
+        margin-bottom:22px !important;
+      }
+      .form-title{
+        font-size:28px !important;
+        font-weight:700 !important;
+      }
+      .close{
+        width:46px !important;
+        height:46px !important;
+        font-size:21px !important;
+      }
+      .field{
+        margin-bottom:24px !important;
+      }
+      .label{
+        font-size:20px !important;
+        margin-bottom:11px !important;
+      }
+      .control{
+        min-height:68px !important;
+        padding:0 17px !important;
+        font-size:18px !important;
+        border-radius:14px !important;
+      }
+      .type-switch{
+        padding:6px !important;
+        border-radius:14px !important;
+      }
+      .type-switch button{
+        min-height:60px !important;
+        padding:11px !important;
+        border-radius:11px !important;
+        font-size:19px !important;
+      }
+      .category-grid,.method-grid{
+        gap:12px !important;
+      }
+      .choice{
+        min-height:92px !important;
+        padding:10px 6px !important;
+        border-radius:15px !important;
+        gap:8px !important;
+        font-size:16px !important;
+      }
+      .choice .emoji{
+        font-size:32px !important;
+      }
+      #nominal{
+        min-height:70px !important;
+        font-size:18px !important;
+      }
+      .money-prefix{
+        top:21px !important;
+        font-size:19px !important;
+      }
+      textarea.control{
+        min-height:130px !important;
+        padding:16px 17px !important;
+        font-size:18px !important;
+      }
+      .save-btn{
+        min-height:68px !important;
+        font-size:20px !important;
+        font-weight:700 !important;
+        border-radius:16px !important;
+      }
+      .cancel-edit{
+        min-height:60px !important;
+        font-size:19px !important;
+      }
+      .toast{
+        bottom:145px !important;
+        font-size:18px !important;
+        padding:16px 21px !important;
+      }
+    }
+
+
+    /* =========================================================
+       iPhone V6 — SIGNIFICANTLY LARGER REFERENCE SCALE
+       Final large-touch layout. Overrides previous coarse rules.
+       ========================================================= */
+    @media (pointer:coarse){
+      html, body{
+        -webkit-text-size-adjust:100% !important;
+        text-size-adjust:100% !important;
+      }
+
+      /* ---------- HOME ---------- */
+      .app{
+        padding:24px 12px 190px !important;
+      }
+
+      .topbar{
+        min-height:82px !important;
+        margin:2px 0 20px !important;
+      }
+      .brand{
+        font-size:28px !important;
+        font-weight:650 !important;
+        gap:15px !important;
+      }
+      .brand-icon{
+        width:48px !important;
+        height:48px !important;
+        font-size:24px !important;
+      }
+      .date-label{
+        font-size:19px !important;
+      }
+
+      .balance-card{
+        padding:42px 20px 30px !important;
+        border-radius:28px !important;
+      }
+      .balance-label{
+        font-size:21px !important;
+      }
+      .balance{
+        font-size:60px !important;
+        line-height:1.08 !important;
+        letter-spacing:-2px !important;
+        margin:10px 0 8px !important;
+      }
+      .balance-change{
+        font-size:19px !important;
+        margin-bottom:22px !important;
+      }
+      .segmented{
+        padding:7px !important;
+        border-radius:16px !important;
+      }
+      .segmented button{
+        min-height:62px !important;
+        font-size:19px !important;
+        font-weight:600 !important;
+        border-radius:12px !important;
+      }
+
+      .chart-card{
+        margin-top:18px !important;
+        min-height:270px !important;
+        padding:30px 18px 22px !important;
+        border-radius:28px !important;
+      }
+      .chart-head,.chart-amount{
+        font-size:20px !important;
+      }
+      .chart-amount{
+        margin-bottom:14px !important;
+      }
+      .bars{
+        height:175px !important;
+        gap:12px !important;
+        padding-top:8px !important;
+      }
+      .bar-col{
+        max-width:58px !important;
+        gap:9px !important;
+      }
+      .bar-label{
+        font-size:14px !important;
+      }
+
+      .section-title{
+        font-size:29px !important;
+        font-weight:650 !important;
+        margin:34px 2px 16px !important;
+      }
+      .transaction{
+        gap:20px !important;
+        padding:23px 3px !important;
+        min-height:112px !important;
+      }
+      .tx-icon{
+        width:70px !important;
+        height:70px !important;
+        border-radius:19px !important;
+        font-size:34px !important;
+      }
+      .tx-name{
+        font-size:23px !important;
+        font-weight:600 !important;
+      }
+      .tx-date{
+        font-size:16px !important;
+        margin-top:7px !important;
+      }
+      .tx-amount{
+        font-size:21px !important;
+        font-weight:600 !important;
+      }
+      .tx-actions{
+        margin-top:9px !important;
+        gap:12px !important;
+      }
+      .mini-btn{
+        font-size:16px !important;
+        padding:5px 3px !important;
+      }
+
+      /* ---------- BOTTOM NAV: HIGHER + LARGER ---------- */
+      .bottom-nav{
+        left:10px !important;
+        right:10px !important;
+        bottom:calc(48px + env(safe-area-inset-bottom)) !important;
+        width:auto !important;
+        min-height:112px !important;
+        padding:12px 12px !important;
+        gap:10px !important;
+        border:1px solid #3a4654 !important;
+        border-radius:28px !important;
+        background:rgba(10,14,20,.99) !important;
+        box-shadow:0 14px 38px rgba(0,0,0,.55) !important;
+      }
+      .nav-btn{
+        min-width:120px !important;
+        min-height:88px !important;
+        padding:8px 8px !important;
+        gap:5px !important;
+        font-size:18px !important;
+        font-weight:650 !important;
+      }
+      .nav-icon{
+        font-size:48px !important;
+        line-height:46px !important;
+      }
+      .add-nav{
+        min-height:74px !important;
+        padding:16px 28px !important;
+        border-radius:37px !important;
+        font-size:21px !important;
+        font-weight:700 !important;
+      }
+
+      /* ---------- ADD / EDIT TRANSACTION ---------- */
+      .sheet{
+        max-height:98svh !important;
+        padding:24px 18px calc(38px + env(safe-area-inset-bottom)) !important;
+        border-radius:34px 34px 0 0 !important;
+      }
+      .handle{
+        width:58px !important;
+        height:7px !important;
+        margin-bottom:26px !important;
+      }
+      .form-head{
+        margin-bottom:24px !important;
+      }
+      .form-title{
+        font-size:31px !important;
+        font-weight:700 !important;
+      }
+      .close{
+        width:50px !important;
+        height:50px !important;
+        font-size:23px !important;
+      }
+      .field{
+        margin-bottom:27px !important;
+      }
+      .label{
+        font-size:21px !important;
+        margin-bottom:12px !important;
+        font-weight:600 !important;
+      }
+      .control{
+        min-height:74px !important;
+        padding:0 18px !important;
+        font-size:18px !important;
+        border-radius:15px !important;
+      }
+      .type-switch{
+        padding:7px !important;
+        border-radius:15px !important;
+      }
+      .type-switch button{
+        min-height:66px !important;
+        padding:12px !important;
+        border-radius:12px !important;
+        font-size:20px !important;
+        font-weight:600 !important;
+      }
+      .category-grid,.method-grid{
+        gap:13px !important;
+      }
+      .choice{
+        min-height:104px !important;
+        padding:11px 6px !important;
+        border-radius:16px !important;
+        gap:9px !important;
+        font-size:17px !important;
+        font-weight:600 !important;
+      }
+      .choice .emoji{
+        font-size:36px !important;
+      }
+      #nominal{
+        min-height:76px !important;
+        font-size:18px !important;
+      }
+      .money-prefix{
+        top:23px !important;
+        font-size:20px !important;
+      }
+      textarea.control{
+        min-height:145px !important;
+        padding:17px 18px !important;
+        font-size:18px !important;
+      }
+      .save-btn{
+        min-height:74px !important;
+        font-size:21px !important;
+        font-weight:700 !important;
+        border-radius:17px !important;
+      }
+      .cancel-edit{
+        min-height:64px !important;
+        font-size:20px !important;
+      }
+      .toast{
+        bottom:170px !important;
+        font-size:19px !important;
+        padding:17px 22px !important;
+      }
+
+      /* Keep text inputs above iOS's auto-zoom threshold. */
+      input, textarea, select{
+        font-size:18px !important;
+      }
+    }
+
+
+    /* =========================================================
+       iPhone V7 — XL REFERENCE SCALE
+       Significant enlargement. Designed to match the supplied
+       native-iPhone reference proportions and touch targets.
+       This block intentionally overrides all previous coarse rules.
+       ========================================================= */
+    @media (pointer:coarse){
+      html,body{
+        -webkit-text-size-adjust:100% !important;
+        text-size-adjust:100% !important;
+        zoom:1 !important;
+      }
+
+      /* Keep the web app visually edge-to-edge while giving controls
+         enough breathing room. */
+      .app{
+        padding:28px 10px 220px !important;
+      }
+
+      /* ================= HOME HEADER ================= */
+      .topbar{
+        min-height:92px !important;
+        margin:0 4px 24px !important;
+      }
+      .brand{
+        font-size:31px !important;
+        line-height:1.15 !important;
+        font-weight:700 !important;
+        gap:16px !important;
+      }
+      .brand-icon{
+        width:54px !important;
+        height:54px !important;
+        font-size:27px !important;
+        border-radius:50% !important;
+      }
+      .date-label{
+        font-size:21px !important;
+        font-weight:600 !important;
+      }
+
+      /* ================= BALANCE ================= */
+      .balance-card{
+        padding:48px 22px 34px !important;
+        border-radius:30px !important;
+      }
+      .balance-label{
+        font-size:23px !important;
+        line-height:1.2 !important;
+      }
+      .balance{
+        font-size:72px !important;
+        line-height:1.04 !important;
+        letter-spacing:-2.8px !important;
+        font-weight:600 !important;
+        margin:12px 0 10px !important;
+      }
+      .balance-change{
+        font-size:21px !important;
+        line-height:1.25 !important;
+        margin-bottom:25px !important;
+      }
+      .segmented{
+        padding:8px !important;
+        border-radius:17px !important;
+      }
+      .segmented button{
+        min-height:68px !important;
+        padding:10px !important;
+        font-size:21px !important;
+        font-weight:650 !important;
+        border-radius:13px !important;
+      }
+
+      /* ================= CHART ================= */
+      .chart-card{
+        margin-top:20px !important;
+        min-height:320px !important;
+        padding:34px 18px 24px !important;
+        border-radius:30px !important;
+      }
+      .chart-head,.chart-amount{
+        font-size:22px !important;
+        line-height:1.25 !important;
+      }
+      .chart-amount{margin-bottom:16px !important;}
+      .bars{
+        height:215px !important;
+        gap:13px !important;
+        padding-top:10px !important;
+      }
+      .bar-col{
+        max-width:64px !important;
+        gap:10px !important;
+      }
+      .bar-label{
+        font-size:16px !important;
+        font-weight:500 !important;
+      }
+
+      /* ================= TRANSACTIONS ================= */
+      .section-title{
+        font-size:34px !important;
+        line-height:1.2 !important;
+        font-weight:700 !important;
+        margin:38px 3px 18px !important;
+      }
+      .transaction{
+        gap:22px !important;
+        padding:27px 3px !important;
+        min-height:138px !important;
+      }
+      .tx-icon{
+        flex:0 0 auto !important;
+        width:82px !important;
+        height:82px !important;
+        border-radius:21px !important;
+        font-size:39px !important;
+      }
+      .tx-name{
+        font-size:27px !important;
+        line-height:1.2 !important;
+        font-weight:600 !important;
+      }
+      .tx-date{
+        font-size:18px !important;
+        line-height:1.25 !important;
+        margin-top:8px !important;
+      }
+      .tx-amount{
+        font-size:24px !important;
+        line-height:1.2 !important;
+        font-weight:650 !important;
+      }
+      .tx-actions{
+        margin-top:10px !important;
+        gap:14px !important;
+      }
+      .mini-btn{
+        font-size:18px !important;
+        padding:6px 4px !important;
+      }
+
+      /* ================= BOTTOM NAV =================
+         Raised higher than V6 and larger touch targets. */
+      .bottom-nav{
+        left:8px !important;
+        right:8px !important;
+        bottom:calc(64px + env(safe-area-inset-bottom)) !important;
+        min-height:128px !important;
+        padding:14px 12px !important;
+        gap:10px !important;
+        border:2px solid #3a4654 !important;
+        border-radius:30px !important;
+        background:rgba(10,14,20,.995) !important;
+        box-shadow:0 16px 44px rgba(0,0,0,.60) !important;
+      }
+      .nav-btn{
+        min-width:132px !important;
+        min-height:100px !important;
+        padding:8px 8px !important;
+        gap:6px !important;
+        font-size:20px !important;
+        font-weight:700 !important;
+      }
+      .nav-icon{
+        font-size:56px !important;
+        line-height:52px !important;
+      }
+      .add-nav{
+        min-height:82px !important;
+        padding:17px 27px !important;
+        border-radius:41px !important;
+        font-size:23px !important;
+        font-weight:700 !important;
+        white-space:nowrap !important;
+      }
+
+      /* ================= FORM ================= */
+      .sheet{
+        max-height:99svh !important;
+        padding:28px 16px calc(44px + env(safe-area-inset-bottom)) !important;
+        border-radius:38px 38px 0 0 !important;
+      }
+      .handle{
+        width:64px !important;
+        height:8px !important;
+        margin-bottom:30px !important;
+        border-radius:10px !important;
+      }
+      .form-head{
+        margin-bottom:28px !important;
+      }
+      .form-title{
+        font-size:35px !important;
+        line-height:1.15 !important;
+        font-weight:750 !important;
+      }
+      .close{
+        width:54px !important;
+        height:54px !important;
+        font-size:25px !important;
+      }
+      .field{
+        margin-bottom:31px !important;
+      }
+      .label{
+        font-size:24px !important;
+        line-height:1.2 !important;
+        margin-bottom:13px !important;
+        font-weight:700 !important;
+      }
+      .control{
+        min-height:82px !important;
+        padding:0 20px !important;
+        font-size:20px !important;
+        border-radius:17px !important;
+      }
+      .type-switch{
+        padding:8px !important;
+        border-radius:17px !important;
+      }
+      .type-switch button{
+        min-height:74px !important;
+        padding:14px 10px !important;
+        border-radius:13px !important;
+        font-size:22px !important;
+        font-weight:700 !important;
+      }
+      .category-grid,.method-grid{
+        gap:15px !important;
+      }
+      .choice{
+        min-height:122px !important;
+        padding:13px 7px !important;
+        border-radius:18px !important;
+        gap:10px !important;
+        font-size:19px !important;
+        line-height:1.15 !important;
+        font-weight:650 !important;
+      }
+      .choice .emoji{
+        font-size:42px !important;
+      }
+      #nominal{
+        min-height:82px !important;
+        font-size:20px !important;
+      }
+      .money-prefix{
+        top:25px !important;
+        left:20px !important;
+        font-size:21px !important;
+      }
+      textarea.control{
+        min-height:165px !important;
+        padding:19px 20px !important;
+        font-size:20px !important;
+      }
+      .save-btn{
+        min-height:82px !important;
+        font-size:23px !important;
+        font-weight:750 !important;
+        border-radius:19px !important;
+      }
+      .cancel-edit{
+        min-height:70px !important;
+        font-size:21px !important;
+      }
+      .toast{
+        bottom:185px !important;
+        font-size:20px !important;
+        padding:18px 24px !important;
+        border-radius:16px !important;
+      }
+
+      /* iOS anti-auto-zoom: 20px is safely above the 16px threshold. */
+      input,textarea,select{
+        font-size:20px !important;
+      }
+    }
+
+
+    /* =========================================================
+       iPhone V8 — EXTRA LARGE / REFERENCE SCALE
+       Final aggressive readability pass.
+       This intentionally overrides all previous touch/iPhone rules.
+       ========================================================= */
+    @media (pointer:coarse){
+      html,body{
+        -webkit-text-size-adjust:100% !important;
+        text-size-adjust:100% !important;
+        zoom:1 !important;
+      }
+
+      .app{
+        padding:30px 14px 235px !important;
+      }
+
+      /* HEADER */
+      .topbar{
+        min-height:100px !important;
+        margin:0 2px 28px !important;
+      }
+      .brand{
+        font-size:36px !important;
+        line-height:1.1 !important;
+        font-weight:700 !important;
+        gap:18px !important;
+      }
+      .brand-icon{
+        width:62px !important;
+        height:62px !important;
+        font-size:30px !important;
+      }
+      .date-label{
+        font-size:23px !important;
+        font-weight:600 !important;
+      }
+
+      /* BALANCE */
+      .balance-card{
+        padding:58px 26px 40px !important;
+        border-radius:34px !important;
+      }
+      .balance-label{
+        font-size:27px !important;
+      }
+      .balance{
+        font-size:86px !important;
+        line-height:1 !important;
+        letter-spacing:-3.2px !important;
+        margin:15px 0 13px !important;
+      }
+      .balance-change{
+        font-size:24px !important;
+        margin-bottom:29px !important;
+      }
+      .segmented{
+        padding:9px !important;
+        border-radius:19px !important;
+      }
+      .segmented button{
+        min-height:76px !important;
+        font-size:23px !important;
+        border-radius:15px !important;
+      }
+
+      /* CHART */
+      .chart-card{
+        margin-top:24px !important;
+        min-height:370px !important;
+        padding:40px 22px 28px !important;
+        border-radius:34px !important;
+      }
+      .chart-head,.chart-amount{
+        font-size:24px !important;
+      }
+      .chart-amount{
+        margin-bottom:18px !important;
+      }
+      .bars{
+        height:250px !important;
+        gap:14px !important;
+      }
+      .bar-col{
+        max-width:70px !important;
+        gap:11px !important;
+      }
+      .bar{
+        border-radius:7px 7px 4px 4px !important;
+      }
+      .bar-label{
+        font-size:18px !important;
+        font-weight:600 !important;
+      }
+
+      /* TRANSACTIONS */
+      .section-title{
+        font-size:40px !important;
+        line-height:1.15 !important;
+        font-weight:700 !important;
+        margin:44px 4px 22px !important;
+      }
+      .transaction{
+        gap:25px !important;
+        padding:32px 4px !important;
+        min-height:158px !important;
+      }
+      .tx-icon{
+        width:94px !important;
+        height:94px !important;
+        border-radius:24px !important;
+        font-size:45px !important;
+      }
+      .tx-name{
+        font-size:31px !important;
+        line-height:1.18 !important;
+        font-weight:650 !important;
+      }
+      .tx-date{
+        font-size:18px !important;
+        margin-top:8px !important;
+      }
+      .tx-amount{
+        font-size:24px !important;
+        font-weight:600 !important;
+      }
+      .tx-actions{
+        margin-top:10px !important;
+        gap:12px !important;
+      }
+      .mini-btn{
+        font-size:17px !important;
+        padding:5px 2px !important;
+      }
+
+      /* BOTTOM NAV — lifted higher and very easy to tap */
+      .bottom-nav{
+        left:16px !important;
+        right:16px !important;
+        bottom:32px !important;
+        width:auto !important;
+        min-height:124px !important;
+        padding:12px 18px !important;
+        gap:12px !important;
+        border:2px solid #303b48 !important;
+        border-radius:30px !important;
+        background:rgba(9,13,19,.99) !important;
+        box-shadow:0 14px 38px rgba(0,0,0,.58) !important;
+      }
+      .nav-btn{
+        min-width:120px !important;
+        min-height:92px !important;
+        padding:8px 12px !important;
+        gap:6px !important;
+        font-size:19px !important;
+        font-weight:600 !important;
+      }
+      .nav-icon{
+        font-size:50px !important;
+        line-height:48px !important;
+      }
+      .add-nav{
+        min-height:76px !important;
+        padding:17px 28px !important;
+        border-radius:38px !important;
+        font-size:22px !important;
+        font-weight:700 !important;
+      }
+
+      /* FORM */
+      .sheet{
+        max-height:98svh !important;
+        padding:24px 24px calc(38px + env(safe-area-inset-bottom)) !important;
+        border-radius:34px 34px 0 0 !important;
+      }
+      .handle{
+        width:60px !important;
+        height:7px !important;
+        margin-bottom:26px !important;
+      }
+      .form-head{
+        margin-bottom:24px !important;
+      }
+      .form-title{
+        font-size:34px !important;
+        font-weight:700 !important;
+      }
+      .close{
+        width:50px !important;
+        height:50px !important;
+        font-size:23px !important;
+      }
+      .field{
+        margin-bottom:26px !important;
+      }
+      .label{
+        font-size:23px !important;
+        margin-bottom:11px !important;
+        font-weight:600 !important;
+      }
+      .control{
+        min-height:72px !important;
+        padding:0 18px !important;
+        font-size:20px !important;
+        border-radius:15px !important;
+      }
+      .type-switch{
+        padding:6px !important;
+        border-radius:15px !important;
+      }
+      .type-switch button{
+        min-height:68px !important;
+        font-size:21px !important;
+        border-radius:11px !important;
+      }
+      .category-grid,.method-grid{
+        grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+        gap:13px !important;
+      }
+      .choice{
+        min-height:100px !important;
+        padding:10px 6px !important;
+        border-radius:16px !important;
+        gap:9px !important;
+        font-size:17px !important;
+        font-weight:600 !important;
+      }
+      .choice .emoji{
+        font-size:36px !important;
+      }
+      #nominal{
+        min-height:74px !important;
+        font-size:20px !important;
+      }
+      .money-prefix{
+        top:22px !important;
+        left:16px !important;
+        font-size:20px !important;
+      }
+      textarea.control{
+        min-height:150px !important;
+        padding:17px 18px !important;
+        font-size:20px !important;
+      }
+      .save-btn{
+        min-height:76px !important;
+        font-size:22px !important;
+        font-weight:700 !important;
+        border-radius:16px !important;
+      }
+      .cancel-edit{
+        min-height:68px !important;
+        font-size:20px !important;
+      }
+      .toast{
+        bottom:170px !important;
+        font-size:19px !important;
+        padding:17px 22px !important;
+      }
+
+      /* iOS input zoom protection: keep editable text at 20px+. */
+      input, textarea, select{
+        font-size:20px !important;
+      }
+    }
+
+
+
+
+
+    /* =========================================================
+       V14 — iPhone form architecture
+       ---------------------------------------------------------
+       The home screen keeps the approved V8-scale styling.
+       On touch devices the transaction form is no longer a
+       position:fixed bottom-sheet. It becomes a normal document
+       layer so iOS can manage keyboard/visual viewport naturally.
+       This avoids the WebKit modal+input zoom/pinch interaction.
+       ========================================================= */
+    @media (pointer:coarse){
+      html, body{
+        width:100%;
+        min-width:100%;
+        -webkit-text-size-adjust:100%;
+        text-size-adjust:100%;
+        touch-action:auto !important;
+      }
+
+      /* Keep native pinch zoom available everywhere. */
+      .app, .modal, .sheet{
+        touch-action:auto !important;
+      }
+
+      /* Form is a normal document layer instead of fixed. */
+      .modal{
+        position:absolute !important;
+        top:0 !important;
+        left:0 !important;
+        right:0 !important;
+        width:100% !important;
+        min-height:100svh !important;
+        height:auto !important;
+        align-items:flex-start !important;
+        overflow:visible !important;
+        background:rgba(0,0,0,.66) !important;
+        backdrop-filter:blur(7px);
+      }
+
+      .sheet{
+        position:relative !important;
+        width:100% !important;
+        max-width:none !important;
+        min-height:100svh !important;
+        max-height:none !important;
+        overflow:visible !important;
+        -webkit-overflow-scrolling:auto !important;
+        overscroll-behavior:auto !important;
+        border:0 !important;
+        border-radius:0 !important;
+        padding:
+          max(20px, env(safe-area-inset-top))
+          max(22px, env(safe-area-inset-right))
+          calc(34px + env(safe-area-inset-bottom))
+          max(22px, env(safe-area-inset-left)) !important;
+        box-shadow:none !important;
+      }
+
+      .handle{
+        margin-bottom:22px !important;
+      }
+
+      /* Large touch targets; editable text stays at 16px to avoid
+         Safari's input-focus enlargement. */
+      /* iOS: use a genuinely large computed font on every editable control.
+         Do not use zoom/transform/text-size-adjust hacks here. */
+      input.control,
+      textarea.control,
+      select.control{
+        font-size:20px !important;
+        line-height:1.4 !important;
+        min-width:0 !important;
+      }
+
+      /* Keep the protection broad in case another rule targets the element. */
+      input, textarea, select, [contenteditable="true"]{
+        font-size:20px !important;
+      }
+
+      #nominal{
+        min-height:82px !important;
+        height:82px !important;
+        padding-left:88px !important;
+        padding-right:20px !important;
+        font-size:20px !important;
+      }
+
+      .money-prefix{
+        left:24px !important;
+        top:50% !important;
+        transform:translateY(-50%) !important;
+        font-size:22px !important;
+        z-index:3 !important;
+      }
+
+      #catatan{
+        min-height:165px !important;
+        padding:20px !important;
+        font-size:20px !important;
+      }
+
+      input.control::placeholder,
+      textarea.control::placeholder{
+        font-size:20px !important;
+      }
+
+      /* Keep all non-input controls large and comfortable. */
+      .form-title{font-size:25px !important;}
+      .label{font-size:18px !important;}
+      .type-switch button{
+        min-height:56px !important;
+        font-size:18px !important;
+      }
+      .category-grid,
+      .method-grid{
+        grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+        gap:11px !important;
+      }
+      .choice{
+        min-height:82px !important;
+        font-size:15px !important;
+      }
+      .choice .emoji{font-size:29px !important;}
+      .save-btn{
+        min-height:64px !important;
+        font-size:19px !important;
+      }
+      .cancel-edit{
+        min-height:58px !important;
+        font-size:18px !important;
+      }
+    }
+
+    /* =========================================================
+       V17 — Clean outline SVG icons + extra-large transaction form
+       ========================================================= */
+    @media (pointer:coarse){
+      .modal .sheet{
+        padding:26px 20px calc(42px + env(safe-area-inset-bottom)) !important;
+      }
+      .handle{
+        width:68px !important;
+        height:7px !important;
+        margin:2px auto 28px !important;
+      }
+      .form-head{
+        margin-bottom:28px !important;
+      }
+      .form-title{
+        font-size:30px !important;
+        line-height:1.1 !important;
+        letter-spacing:.2px !important;
+      }
+      .close{
+        width:52px !important;
+        height:52px !important;
+        border-radius:16px !important;
+        font-size:25px !important;
+      }
+      .field{
+        margin-bottom:30px !important;
+      }
+      .label{
+        font-size:22px !important;
+        font-weight:650 !important;
+        margin-bottom:13px !important;
+      }
+      .control{
+        min-height:76px !important;
+        border-radius:17px !important;
+        padding:0 19px !important;
+        font-size:20px !important;
+      }
+      .type-switch{
+        padding:7px !important;
+        border-radius:18px !important;
+        gap:6px !important;
+      }
+      .type-switch button{
+        min-height:72px !important;
+        border-radius:14px !important;
+        font-size:22px !important;
+        font-weight:650 !important;
+      }
+      .category-grid,.method-grid{
+        grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+        gap:14px !important;
+      }
+      .choice{
+        min-height:122px !important;
+        padding:14px 5px !important;
+        border-radius:18px !important;
+        gap:10px !important;
+        font-size:17px !important;
+        line-height:1.12 !important;
+        font-weight:550 !important;
+        border-width:1.5px !important;
+      }
+      .choice .mini-icon{
+        width:48px !important;
+        height:48px !important;
+        stroke-width:1.8 !important;
+        flex:none !important;
+      }
+      .choice.selected .mini-icon{
+        filter:none !important;
+      }
+      .choice.selected{
+        border-width:2px !important;
+        box-shadow:0 0 0 1px rgba(255,255,255,.04) inset !important;
+      }
+      .money-wrap .control{
+        min-height:80px !important;
+        padding-left:78px !important;
+        font-size:21px !important;
+        font-weight:650 !important;
+      }
+      .money-prefix{
+        left:21px !important;
+        top:25px !important;
+        font-size:22px !important;
+        font-weight:650 !important;
+      }
+      textarea.control{
+        min-height:180px !important;
+        padding:19px !important;
+        font-size:20px !important;
+        line-height:1.5 !important;
+      }
+      .save-btn{
+        min-height:82px !important;
+        border-radius:18px !important;
+        font-size:22px !important;
+        font-weight:700 !important;
+      }
+      .cancel-edit{
+        min-height:70px !important;
+        font-size:21px !important;
+      }
+      .tx-icon .mini-icon{
+        width:36px !important;
+        height:36px !important;
+      }
+    }
+
+
+    /* =========================================================
+       V19 — Beranda income/expense visual + performance layer
+       ========================================================= */
+    :root{
+      --income:#17b86a;
+      --income-dark:#075d39;
+      --expense:#ff3b3b;
+      --expense-dark:#690d16;
+      --home-card:#10151c;
+      --home-border:#252d37;
+    }
+
+    .home-topbar{margin-bottom:14px !important;}
+    .home-brand{font-size:26px;font-weight:760;letter-spacing:-.5px;line-height:1.1}
+    .home-tagline{margin-top:5px;color:#9ba5b2;font-size:15px;font-weight:500}
+    .home-actions{display:flex;gap:8px}
+    .home-action{width:46px;height:46px;border:0;border-radius:14px;background:#151b23;color:#eef2f5;font-size:25px;display:grid;place-items:center}
+
+    .home-filter{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;background:#171d25;border:1px solid #29323d;border-radius:16px;padding:5px;margin-bottom:14px}
+    .home-filter button{min-height:50px;border:0;border-radius:12px;background:transparent;color:#b9c1ca;font-size:16px;font-weight:650}
+    .home-filter button.active{background:#f1f4f7;color:#111820;box-shadow:0 1px 4px rgba(0,0,0,.18)}
+
+    .summary-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .money-card{position:relative;overflow:hidden;min-height:190px;padding:16px 15px 12px;border-radius:21px;border:1px solid rgba(255,255,255,.08);color:#fff;contain:layout paint}
+    .money-card:after{content:"";position:absolute;left:-8%;right:-8%;bottom:-22px;height:65px;border-radius:50% 50% 0 0;border-top:3px solid rgba(255,255,255,.38);opacity:.7;transform:rotate(-3deg)}
+    .income-card{background:linear-gradient(145deg,#087744 0%,#07562f 52%,#062b21 100%)}
+    .expense-card{background:linear-gradient(145deg,#8b121c 0%,#5b0d15 52%,#2d0b12 100%)}
+    .money-card-top{display:grid;grid-template-columns:44px 1fr 18px;align-items:center;gap:9px;position:relative;z-index:1}
+    .money-icon{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:28px;font-weight:800;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18)}
+    .income-icon{background:rgba(22,214,126,.72)} .expense-icon{background:rgba(255,44,55,.82)}
+    .money-title{font-size:14px;font-weight:600;white-space:nowrap}
+    .money-arrow{font-size:26px;opacity:.9;text-align:right}
+    .money-value{position:relative;z-index:1;margin-top:13px;font-size:25px;line-height:1.05;font-weight:780;letter-spacing:-.7px;white-space:nowrap}
+    .money-meta{position:relative;z-index:1;margin-top:7px;font-size:13px;color:rgba(255,255,255,.78)}
+    .mini-bars{position:absolute;left:15px;right:15px;bottom:12px;height:50px;display:flex;align-items:flex-end;gap:5px;z-index:1;opacity:.45}
+    .mini-bars span{display:block;flex:1;min-width:3px;border-radius:4px 4px 0 0;background:rgba(255,255,255,.75)}
+
+    .home-balance-card{display:flex;align-items:center;gap:14px;margin-top:12px;padding:16px 17px;border:1px solid #29323d;border-radius:20px;background:linear-gradient(145deg,#151b23,#0e1319);min-height:86px}
+    .balance-icon{width:50px;height:50px;border-radius:15px;background:#202832;display:grid;place-items:center;color:#e7edf2;font-size:26px}
+    .balance-copy{min-width:0;flex:1}.balance-copy .balance-label{font-size:15px;color:#aab3bd}.balance-copy .balance{margin:3px 0 0;font-size:27px;font-weight:760;letter-spacing:-.7px}
+    .balance-chevron{font-size:28px;color:#b6c0ca}
+
+    .monthly-card{margin-top:12px;background:#f3f5f7;color:#10161d;border-radius:21px;padding:18px 16px 16px}
+    .monthly-head{display:flex;justify-content:space-between;align-items:center}.monthly-head .section-title{color:#10161d;margin:0 !important;font-size:20px !important}.monthly-head>span{font-size:14px;color:#66717d}
+    .monthly-bar{display:flex;height:16px;overflow:hidden;border-radius:10px;background:#dfe4e8;margin:15px 0 14px}.monthly-bar div{height:100%;transition:width .2s ease}.monthly-bar div:first-child{background:linear-gradient(90deg,#12ae65,#20c878)}.monthly-bar div:last-child{background:linear-gradient(90deg,#ff434b,#ff5b62)}
+    .monthly-values{display:grid;grid-template-columns:1fr 1fr;gap:12px}.monthly-value{display:grid;grid-template-columns:10px 1fr;column-gap:7px;align-items:center;font-size:14px}.monthly-value .dot{width:10px;height:10px;border-radius:50%;grid-row:span 2}.monthly-value strong{grid-column:2;font-size:17px;margin-top:3px}.income-text .dot{background:var(--income)}.expense-text .dot{background:var(--expense)}
+
+    .home-section-title{display:flex;align-items:center;gap:7px;font-size:22px !important;margin:25px 2px 9px !important}.home-section-title span{font-size:13px;color:#7e8995;font-weight:500}
+    .home-transactions{background:#10151c;border:1px solid #252d37;border-radius:20px;padding:3px 12px;overflow:hidden}
+    .home-transaction{min-height:82px !important;padding:14px 2px !important;border-bottom:1px solid #252d37;gap:12px !important}.home-transaction:last-child{border-bottom:0}
+    .home-transaction .tx-icon{width:48px !important;height:48px !important;border-radius:14px !important;flex:0 0 48px !important;display:grid;place-items:center}
+    .home-transaction .tx-icon.income{background:rgba(23,184,106,.14);color:#25d17e;border:1px solid rgba(23,184,106,.28)}
+    .home-transaction .tx-icon.expense{background:rgba(255,59,59,.14);color:#ff6565;border:1px solid rgba(255,59,59,.28)}
+    .home-transaction .tx-name{font-size:17px !important;font-weight:620 !important}.home-transaction .tx-date{font-size:12px !important;color:#87929e}.home-transaction .tx-amount{font-size:16px !important;font-weight:720 !important;white-space:nowrap}.home-transaction .tx-amount.income{color:#27d47e}.home-transaction .tx-amount.expense{color:#ff6868}
+    .home-transaction .tx-actions{opacity:.65}.home-transaction .mini-btn{font-size:12px !important;color:#9ba6b2}
+
+    /* Reduce expensive visual work on iPhone without disabling scrolling/zoom. */
+    .app{contain:layout style}
+    .bottom-nav{backdrop-filter:none !important;-webkit-backdrop-filter:none !important}
+    .modal{backdrop-filter:none !important;-webkit-backdrop-filter:none !important}
+    .balance-card,.chart-card{display:none !important}
+
+    @media (pointer:coarse){
+      .app{padding:24px 18px 145px !important}
+      .home-brand{font-size:28px !important}.home-tagline{font-size:16px !important}
+      .home-action{width:50px !important;height:50px !important;font-size:27px !important}
+      .home-filter button{min-height:54px !important;font-size:17px !important}
+      .summary-pair{gap:11px !important}.money-card{min-height:205px !important;padding:18px 16px 13px !important}.money-card-top{grid-template-columns:48px 1fr 18px !important}.money-icon{width:48px !important;height:48px !important;font-size:30px !important}.money-title{font-size:15px !important}.money-value{font-size:27px !important}.money-meta{font-size:14px !important}.money-card:after{bottom:-18px !important}
+      .home-balance-card{min-height:96px !important;padding:18px !important}.balance-icon{width:56px !important;height:56px !important}.balance-copy .balance-label{font-size:17px !important}.balance-copy .balance{font-size:31px !important}
+      .monthly-card{padding:20px 17px 18px !important}.monthly-head .section-title{font-size:21px !important}.monthly-values{gap:14px !important}.monthly-value{font-size:15px !important}.monthly-value strong{font-size:18px !important}
+      .home-section-title{font-size:24px !important;margin-top:28px !important}.home-transaction .tx-name{font-size:18px !important}.home-transaction .tx-amount{font-size:17px !important}.home-transaction .tx-date{font-size:13px !important}
+    }
+
+    @media (max-width:430px){
+      .money-value{font-size:22px !important}.money-title{font-size:13px !important}.money-card{min-height:190px !important}.money-card-top{gap:7px !important}.money-icon{width:42px !important;height:42px !important;font-size:27px !important}.summary-pair{gap:8px !important}.monthly-values{gap:8px !important}
+    }
+
+</style>
+
+  <!-- Keuangan Dani — V20 static web app -->
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/keuangan-dani-icon-180.png">
+  <link rel="icon" type="image/png" sizes="180x180" href="icons/keuangan-dani-icon-180.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-title" content="Keuangan Dani">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+</head>
+
+<body>
+<div class="setup-overlay" id="setupOverlay">
+  <div class="setup-card">
+    <h2>Hubungkan Keuangan Dani</h2>
+    <p>Masukkan API Token Keuangan Dani satu kali. Token disimpan hanya di perangkat ini.</p>
+    <input id="apiTokenInput" type="password" autocomplete="off" placeholder="API Token">
+    <button onclick="saveApiToken()">Hubungkan</button>
+    <p class="setup-note">Untuk keamanan, token tidak ditanam di source code V20.</p>
+  </div>
+</div>
+<div class="app">
+
+  <header class="topbar home-topbar">
+    <div>
+      <div class="home-brand">Keuangan Dani</div>
+      <div class="home-tagline">Catat • Kelola • Capai</div>
+    </div>
+    <div class="home-actions">
+      <button class="home-action" aria-label="Cari">⌕</button>
+      <button class="home-action" aria-label="Tanggal">▣</button>
+    </div>
+  </header>
+
+  <section class="home-filter" aria-label="Filter transaksi">
+    <button id="filterAll" class="active" onclick="setHomeFilter('all')">Semua</button>
+    <button id="filterIncome" onclick="setHomeFilter('income')">Pemasukan</button>
+    <button id="filterExpense" onclick="setHomeFilter('expense')">Pengeluaran</button>
+  </section>
+
+  <section class="summary-pair" aria-label="Ringkasan pemasukan dan pengeluaran">
+    <article class="money-card income-card">
+      <div class="money-card-top">
+        <div class="money-icon income-icon">↑</div>
+        <div class="money-title">Total Pemasukan</div>
+        <span class="money-arrow">›</span>
+      </div>
+      <div class="money-value" id="homeIncome">Rp 0</div>
+      <div class="money-meta" id="homeIncomeCount">0 transaksi</div>
+      <div class="mini-bars" id="incomeMiniBars" aria-hidden="true"></div>
+    </article>
+
+    <article class="money-card expense-card">
+      <div class="money-card-top">
+        <div class="money-icon expense-icon">↓</div>
+        <div class="money-title">Total Pengeluaran</div>
+        <span class="money-arrow">›</span>
+      </div>
+      <div class="money-value" id="homeExpense">Rp 0</div>
+      <div class="money-meta" id="homeExpenseCount">0 transaksi</div>
+      <div class="mini-bars" id="expenseMiniBars" aria-hidden="true"></div>
+    </article>
+  </section>
+
+  <section class="home-balance-card">
+    <div class="balance-icon">▣</div>
+    <div class="balance-copy">
+      <div class="balance-label">Saldo Saat Ini</div>
+      <div class="balance" id="saldo">Rp 0</div>
+    </div>
+    <div class="balance-chevron">›</div>
+  </section>
+
+  <section class="monthly-card">
+    <div class="monthly-head">
+      <div class="section-title compact">Ringkasan Bulan Ini</div>
+      <span id="monthlyDetail">Detail ›</span>
+    </div>
+    <div class="monthly-bar" aria-hidden="true">
+      <div id="monthlyIncomeBar"></div><div id="monthlyExpenseBar"></div>
+    </div>
+    <div class="monthly-values">
+      <div class="monthly-value income-text">
+        <span class="dot"></span><span>Pemasukan</span>
+        <strong id="monthlyIncome">Rp 0</strong>
+      </div>
+      <div class="monthly-value expense-text">
+        <span class="dot"></span><span>Pengeluaran</span>
+        <strong id="monthlyExpense">Rp 0</strong>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-title home-section-title">Transaksi Terbaru <span id="transactionCountLabel"></span></div>
+  <section class="transactions home-transactions" id="transactions">
+    <div class="empty">Memuat transaksi...</div>
+  </section>
+
+</div>
+
+<nav class="bottom-nav">
+  <button class="nav-btn active" onclick="scrollHome()">
+    <span class="nav-icon">⌂</span>
+    <span>Beranda</span>
+  </button>
+
+  <button class="add-nav" onclick="openForm()">＋ Tambah Transaksi</button>
+
+  <button class="nav-btn" onclick="refreshAll()">
+    <span class="nav-icon">↻</span>
+    <span>Refresh</span>
+  </button>
+</nav>
+
+<!-- FORM -->
+<div class="modal" id="modal">
+  <div class="sheet">
+    <div class="handle"></div>
+
+    <div class="form-head">
+      <div class="form-title" id="formTitle">TAMBAH TRANSAKSI</div>
+      <button class="close" onclick="closeForm()">✕</button>
+    </div>
+
+    <div class="field">
+      <label class="label">Tanggal</label>
+      <input class="control" type="date" id="tanggal">
+    </div>
+
+    <div class="field">
+      <label class="label">Jenis</label>
+      <div class="type-switch">
+        <button id="incomeType" onclick="setType('Pemasukan')">Pemasukan</button>
+        <button id="expenseType" class="active" onclick="setType('Pengeluaran')">Pengeluaran</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Kategori</label>
+      <div class="category-grid" id="categoryGrid"></div>
+    </div>
+
+    <div class="field">
+      <label class="label">Nominal</label>
+      <div class="money-wrap">
+        <span class="money-prefix">Rp</span>
+        <input class="control nominal-input" type="text" id="nominal" inputmode="numeric" pattern="[0-9]*" autocomplete="off" enterkeyhint="done" placeholder="0" aria-label="Nominal">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Metode</label>
+      <div class="method-grid" id="methodGrid"></div>
+    </div>
+
+    <div class="field">
+      <label class="label">Catatan</label>
+      <textarea class="control note-input" id="catatan" placeholder="Tambahkan deskripsi..." autocomplete="off" enterkeyhint="done" aria-label="Catatan"></textarea>
+    </div>
+
+    <button class="save-btn" id="saveBtn" onclick="saveTransaction()">Simpan Transaksi</button>
+    <button class="cancel-edit" id="cancelEdit" onclick="resetForm();closeForm()">Batal Edit</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let transactions = [];
+  let summary = {pemasukan:0,pengeluaran:0,saldo:0,jumlahTransaksi:0};
+  let chartMode = 'income';
+  let homeFilter = 'all';
+  let loadingData = false;
+  let lastLoadedAt = 0;
+  let currentType = 'Pengeluaran';
+  let selectedCategory = 'Makanan & Minuman';
+  let selectedMethod = 'Cash';
+  let editingId = null;
+
+  // Harus sama persis dengan pilihan pada Shortcut iPhone.
+  // Ikon minimalis berbasis SVG — lebih konsisten dan bersih daripada emoji.
+  const expenseCategories = [
+    ['Makanan & Minuman','food'],
+    ['Transportasi','car'],
+    ['Belanja','bag'],
+    ['Tagihan','receipt'],
+    ['Pulsa & Internet','phone'],
+    ['Kesehatan','heart'],
+    ['Hiburan','game'],
+    ['Pendidikan','book'],
+    ['Rumah Tangga','home'],
+    ['Kebutuhan Pribadi','personal'],
+    ['Olahraga','sport'],
+    ['Kendaraan','vehicle'],
+    ['Perjalanan','plane'],
+    ['Hadiah','gift'],
+    ['Sedekah','hands'],
+    ['Lainnya','more']
+  ];
+
+  const incomeCategories = [
+    ['Gaji','briefcase'],
+    ['Bonus','gift'],
+    ['Tunjangan','wallet'],
+    ['Freelance','laptop'],
+    ['Bisnis','building'],
+    ['Penjualan','cart'],
+    ['Investasi','chart'],
+    ['Hadiah','gift'],
+    ['Pengembalian Dana','return'],
+    ['Lainnya','more']
+  ];
+
+  const methods = [
+    ['Cash','cash','cash'],
+    ['Transfer','transfer','bank'],
+    ['QRIS','qris','wallet'],
+    ['Debit','debit','bank'],
+    ['Credit Card','credit','bank'],
+    ['E-Wallet','ewallet','wallet']
+  ];
+
+  document.addEventListener('DOMContentLoaded', () => {
+    setToday();
+    renderCategories();
+    renderMethods();
+    renderHome();
+    loadData(true);
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if(document.visibilityState === 'visible' && Date.now() - lastLoadedAt > 20000){
+      loadData(true);
+    }
+  });
+
+  function setToday(){
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth()+1).padStart(2,'0');
+    const dd = String(now.getDate()).padStart(2,'0');
+    document.getElementById('tanggal').value = `${yyyy}-${mm}-${dd}`;
+
+    const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+    document.getElementById('todayLabel').textContent =
+      `${dd} ${months[now.getMonth()]} ${yyyy}`;
+  }
+
+  function formatRupiah(value){
+    return 'Rp ' + Number(value || 0).toLocaleString('id-ID');
+  }
+
+  function formatDate(dateString){
+    if(!dateString) return '-';
+    const d = new Date(dateString + 'T00:00:00');
+    if(isNaN(d)) return dateString;
+    const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+    return `${d.getDate()} ${months[d.getMonth()]}`;
+  }
+
+  function escapeHtml(value){
+    return String(value ?? '')
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#039;');
+  }
+
+  function svgIcon(name, size=46){
+    const common = `width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"`;
+    const paths = {
+      food:`<path d="M6 3v7a3 3 0 0 0 3 3V3M6 7h3M9 13v8"/><path d="M16 3v18M16 3c3 1 4 4 4 7v3h-4"/>`,
+      car:`<path d="m4 13 2-6h12l2 6"/><path d="M3 13h18v5H3z"/><path d="M6 18v2M18 18v2"/><circle cx="7" cy="15.5" r="1"/><circle cx="17" cy="15.5" r="1"/>`,
+      bag:`<path d="M5 8h14l-1 12H6L5 8Z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/>`,
+      receipt:`<path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 7h6M9 11h6M9 15h4"/>`,
+      phone:`<rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M10 5h4M11 18.5h2"/>`,
+      heart:`<path d="M20.8 8.7c0 5.5-8.8 10.8-8.8 10.8S3.2 14.2 3.2 8.7A4.7 4.7 0 0 1 12 6.2a4.7 4.7 0 0 1 8.8 2.5Z"/>`,
+      game:`<path d="M7.5 8h9a5 5 0 0 1 4.7 6.8l-1 3a2.8 2.8 0 0 1-5.1.5L14 16h-4l-1.1 2.3a2.8 2.8 0 0 1-5.1-.5l-1-3A5 5 0 0 1 7.5 8Z"/><path d="M7 11v4M5 13h4M16.5 12h.01M19 14h.01"/>`,
+      book:`<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v18H6.5A2.5 2.5 0 0 0 4 22V4.5Z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>`,
+      home:`<path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10M9 20v-6h6v6"/>`,
+      personal:`<path d="M8 5h8l1.5 3H20v13H4V8h2.5L8 5Z"/><path d="M8 5v3h8V5M7 12h10M7 16h7"/>`,
+      sport:`<path d="M5 9h14M4 9l2 7M20 9l-2 7M8 16h8"/><path d="M12 4v16"/>`,
+      vehicle:`<path d="M4 14 6 8h12l2 6v5H4v-5Z"/><path d="M6 14h12M7 19v2M17 19v2"/><circle cx="7" cy="16.5" r="1"/><circle cx="17" cy="16.5" r="1"/>`,
+      plane:`<path d="m3 11 18-5-5 18-4-8-9-5Z"/><path d="m12 16 5-5"/>`,
+      gift:`<path d="M4 9h16v12H4zM3 6h18v3H3zM12 6v15"/><path d="M12 6c-3 0-5-1-5-3 0-1 1-2 2-2 2 0 3 2 3 5ZM12 6c3 0 5-1 5-3 0-1-1-2-2-2-2 0-3 2-3 5Z"/>`,
+      hands:`<path d="M3 13 8 8l4 4 4-5a2 2 0 0 1 3 0l3 3-7 8-6 3-6-5Z"/><path d="m11 12 3 3"/>`,
+      more:`<circle cx="5" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.3" fill="currentColor" stroke="none"/>`,
+      briefcase:`<rect x="3" y="6" width="18" height="14" rx="2"/><path d="M8 6V4h8v2M3 11h18M10 11v3h4v-3"/>`,
+      wallet:`<path d="M4 6h14a3 3 0 0 1 3 3v10H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z"/><path d="M3 8V6a2 2 0 0 1 2-2h11"/><path d="M16 14h5"/>`,
+      laptop:`<rect x="5" y="4" width="14" height="10" rx="1.5"/><path d="M3 18h18M8 18l1-4h6l1 4"/>`,
+      building:`<path d="M5 21V3h14v18M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2M10 21v-3h4v3"/>`,
+      cart:`<path d="M3 4h3l2 11h10l3-8H7"/><circle cx="9" cy="19" r="1.5"/><circle cx="18" cy="19" r="1.5"/>`,
+      chart:`<path d="M4 20V4M4 20h17"/><path d="m7 16 4-4 3 2 5-7"/>`,
+      return:`<path d="M20 7H7l3-3M7 7l3 3"/><path d="M4 15h13l-3 3M17 15l-3-3"/>`,
+      cash:`<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 9h.01M18 15h.01"/>`,
+      transfer:`<path d="M4 8h14l-3-3M18 8l-3 3M20 16H6l3-3M6 16l3 3"/>`,
+      qris:`<path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM15 15h2v2h-2zM19 14v6h-4"/>`,
+      debit:`<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M7 14h5"/>`,
+      credit:`<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M7 14h2M12 14h2M17 14h.01"/>`,
+      ewallet:`<rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M9 6h6M9 18h6"/><path d="M8 11h8"/>`
+    };
+    return `<svg class="mini-icon" ${common} stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${paths[name] || paths.more}</svg>`;
+  }
+
+  function getIcon(category){
+    const all = [...expenseCategories,...incomeCategories];
+    const found = all.find(x => x[0] === category);
+    return svgIcon(found ? found[1] : 'more', 34);
+  }
+
+  function setChartMode(mode){
+    chartMode = mode;
+    document.getElementById('incomeTab').classList.toggle('active', mode === 'income');
+    document.getElementById('expenseTab').classList.toggle('active', mode === 'expense');
+    renderChart();
+  }
+
+  function setType(type){
+    currentType = type;
+    document.getElementById('incomeType').classList.toggle('active', type === 'Pemasukan');
+    document.getElementById('expenseType').classList.toggle('active', type === 'Pengeluaran');
+
+    const cats = type === 'Pemasukan' ? incomeCategories : expenseCategories;
+    if(!cats.some(x => x[0] === selectedCategory)) selectedCategory = cats[0][0];
+    renderCategories();
+  }
+
+  function renderCategories(){
+    const cats = currentType === 'Pemasukan' ? incomeCategories : expenseCategories;
+    const grid = document.getElementById('categoryGrid');
+
+    grid.innerHTML = cats.map(([name,icon]) => `
+      <button type="button" class="choice ${selectedCategory === name ? 'selected' : ''}"
+        onclick="selectCategory('${escapeJs(name)}')">
+        ${svgIcon(icon, 42)}
+        <span>${escapeHtml(name)}</span>
+      </button>
+    `).join('');
+  }
+
+  function renderMethods(){
+    const grid = document.getElementById('methodGrid');
+    grid.innerHTML = methods.map(([name,icon,cls]) => `
+      <button type="button" class="choice ${cls} ${selectedMethod === name ? 'selected' : ''}"
+        onclick="selectMethod('${escapeJs(name)}')">
+        ${svgIcon(icon, 42)}
+        <span>${escapeHtml(name)}</span>
+      </button>
+    `).join('');
+  }
+
+  function escapeJs(value){
+    return String(value).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+  }
+
+  function selectCategory(name){
+    selectedCategory = name;
+    renderCategories();
+  }
+
+  function selectMethod(name){
+    selectedMethod = name;
+    renderMethods();
+  }
+
+  function openForm(){
+    document.getElementById('modal').classList.add('show');
+  }
+
+  function closeForm(){
+    document.getElementById('modal').classList.remove('show');
+  }
+
+  function resetForm(){
+    editingId = null;
+    document.getElementById('formTitle').textContent = 'TAMBAH TRANSAKSI';
+    document.getElementById('saveBtn').textContent = 'Simpan Transaksi';
+    document.getElementById('cancelEdit').style.display = 'none';
+
+    setToday();
+    currentType = 'Pengeluaran';
+    selectedCategory = 'Makanan & Minuman';
+    selectedMethod = 'Cash';
+
+    document.getElementById('nominal').value = '';
+    document.getElementById('catatan').value = '';
+
+    setType(currentType);
+    renderMethods();
+  }
+
+  function editTransaction(id){
+    const t = transactions.find(x => String(x.id) === String(id));
+    if(!t) return;
+
+    editingId = t.id;
+    currentType = t.jenis;
+    selectedCategory = t.kategori;
+    selectedMethod = t.metode || 'Cash';
+
+    document.getElementById('formTitle').textContent = 'EDIT TRANSAKSI';
+    document.getElementById('saveBtn').textContent = 'Simpan Perubahan';
+    document.getElementById('cancelEdit').style.display = 'block';
+
+    document.getElementById('tanggal').value = t.tanggal || '';
+    document.getElementById('nominal').value = Number(t.nominal || 0);
+    document.getElementById('catatan').value = t.catatan || '';
+
+    setType(currentType);
+    renderMethods();
+    openForm();
+  }
+
+
+  const API_URL = 'https://script.google.com/macros/s/AKfycbxteaE-H5FIPcyAIaIuru1u1PLLKf9jlqeQpaJ1Q-y0EVPwlUEctALIbfsiAxc35ENS/exec';
+  let apiToken = localStorage.getItem('keuanganDaniApiToken') || '';
+
+  function ensureApiToken(){
+    if(apiToken){ return true; }
+    document.getElementById('setupOverlay').classList.add('show');
+    return false;
+  }
+
+  function saveApiToken(){
+    const value = document.getElementById('apiTokenInput').value.trim();
+    if(!value){ return; }
+    apiToken = value;
+    localStorage.setItem('keuanganDaniApiToken', apiToken);
+    document.getElementById('setupOverlay').classList.remove('show');
+    loadData(true);
+  }
+
+  function apiGet(action){
+    return new Promise((resolve,reject)=>{
+      if(!ensureApiToken()){ reject(new Error('API Token belum diisi.')); return; }
+      const cb='kdcb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+      const script=document.createElement('script');
+      const cleanup=()=>{ try{delete window[cb]}catch(e){} script.remove(); };
+      window[cb]=(payload)=>{ cleanup(); if(payload && payload.status==='success') resolve(payload.data); else reject(new Error(payload && payload.message ? payload.message : 'Gagal mengambil data.')); };
+      script.onerror=()=>{ cleanup(); reject(new Error('Gagal terhubung ke server.')); };
+      script.src=API_URL+'?api=1&action='+encodeURIComponent(action)+'&token='+encodeURIComponent(apiToken)+'&callback='+encodeURIComponent(cb);
+      document.body.appendChild(script);
+      setTimeout(()=>{ if(window[cb]){ cleanup(); reject(new Error('Koneksi timeout.')); } },15000);
+    });
+  }
+
+  function apiPost(data){
+    if(!ensureApiToken()) return Promise.reject(new Error('API Token belum diisi.'));
+    const payload={...data, token:apiToken};
+    return fetch(API_URL,{
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'text/plain;charset=UTF-8'},
+      body:JSON.stringify(payload)
+    }).then(()=>true);
+  }
+
+  function saveTransaction(){
+    const tanggal = document.getElementById('tanggal').value;
+    const nominal = Number(document.getElementById('nominal').value);
+    const catatan = document.getElementById('catatan').value.trim();
+
+    if(!tanggal){ showToast('Tanggal wajib diisi'); return; }
+    if(!nominal || nominal <= 0){ showToast('Nominal harus lebih dari 0'); return; }
+    if(!selectedCategory){ showToast('Pilih kategori'); return; }
+    if(!selectedMethod){ showToast('Pilih metode pembayaran'); return; }
+
+    const data = {
+      tanggal,
+      jenis: currentType,
+      kategori: selectedCategory,
+      nominal,
+      metode: selectedMethod,
+      catatan
+    };
+
+    const btn = document.getElementById('saveBtn');
+    btn.disabled = true;
+    btn.textContent = editingId ? 'Menyimpan...' : 'Menyimpan...';
+
+    const payload = editingId
+      ? {...data, id:editingId, action:'edit'}
+      : {...data, action:'tambah'};
+    apiPost(payload).then(() => {
+      document.getElementById('saveBtn').disabled = false;
+      resetForm();
+      closeForm();
+      showToast(editingId ? 'Perubahan disimpan' : 'Transaksi berhasil ditambahkan');
+      setTimeout(() => loadData(true), 700);
+    }).catch(onError);
+  }
+
+  function onSaved(result){
+    document.getElementById('saveBtn').disabled = false;
+    resetForm();
+    closeForm();
+    showToast(result && result.message ? result.message : 'Berhasil disimpan');
+    loadData(true);
+  }
+
+  function onError(error){
+    document.getElementById('saveBtn').disabled = false;
+    document.getElementById('saveBtn').textContent = editingId ? 'Simpan Perubahan' : 'Simpan Transaksi';
+    showToast(error && error.message ? error.message : 'Terjadi kesalahan');
+  }
+
+  function deleteTransaction(id){
+    if(!confirm('Hapus transaksi ini?')) return;
+
+    apiPost({action:'hapus', id:id}).then(() => {
+      showToast('Transaksi dihapus');
+      setTimeout(() => loadData(true), 700);
+    }).catch(onError);
+  }
+
+  function loadData(force=false){
+    const now = Date.now();
+    if(loadingData) return;
+    if(!force && now - lastLoadedAt < 25000) return;
+
+    loadingData = true;
+    Promise.all([apiGet('list'), apiGet('saldo')])
+      .then(([txData, sumData]) => {
+        transactions = Array.isArray(txData) ? txData : [];
+        summary = sumData || summary;
+        lastLoadedAt = Date.now();
+        renderHome();
+      })
+      .catch(onError)
+      .finally(() => { loadingData = false; });
+  }
+
+  function refreshAll(){
+    showToast('Memperbarui data...');
+    loadData(true);
+  }
+
+  function setHomeFilter(mode){
+    homeFilter = mode;
+    document.getElementById('filterAll').classList.toggle('active', mode === 'all');
+    document.getElementById('filterIncome').classList.toggle('active', mode === 'income');
+    document.getElementById('filterExpense').classList.toggle('active', mode === 'expense');
+    renderTransactions();
+  }
+
+  function getMonthTransactions(){
+    const now = new Date();
+    const month = now.getMonth();
+    const year = now.getFullYear();
+    return transactions.filter(t => {
+      if(!t.tanggal) return false;
+      const d = new Date(t.tanggal + 'T00:00:00');
+      return !isNaN(d) && d.getMonth() === month && d.getFullYear() === year;
+    });
+  }
+
+  function getDailyTotals(type){
+    const monthly = getMonthTransactions();
+    const daily = {};
+    monthly.forEach(t => {
+      if(t.jenis !== type) return;
+      const d = new Date(t.tanggal + 'T00:00:00');
+      const day = d.getDate();
+      daily[day] = (daily[day] || 0) + Number(t.nominal || 0);
+    });
+    const today = new Date().getDate();
+    const start = Math.max(1, today - 6);
+    const values=[];
+    for(let day=start; day<=today; day++) values.push(daily[day] || 0);
+    return values;
+  }
+
+  function renderMiniBars(id, values){
+    const el=document.getElementById(id);
+    if(!el) return;
+    const max=Math.max(...values,1);
+    el.innerHTML=values.map(v=>`<span style="height:${Math.max(8,Math.round((v/max)*42))}px"></span>`).join('');
+  }
+
+  function renderHome(){
+    const monthly=getMonthTransactions();
+    const income=Number(summary.pemasukan || 0);
+    const expense=Number(summary.pengeluaran || 0);
+    const monthIncome=monthly.filter(t=>t.jenis==='Pemasukan').reduce((s,t)=>s+Number(t.nominal||0),0);
+    const monthExpense=monthly.filter(t=>t.jenis==='Pengeluaran').reduce((s,t)=>s+Number(t.nominal||0),0);
+
+    document.getElementById('saldo').textContent=formatRupiah(summary.saldo);
+    document.getElementById('homeIncome').textContent=formatRupiah(income);
+    document.getElementById('homeExpense').textContent=formatRupiah(expense);
+    document.getElementById('homeIncomeCount').textContent=transactions.filter(t=>t.jenis==='Pemasukan').length+' transaksi';
+    document.getElementById('homeExpenseCount').textContent=transactions.filter(t=>t.jenis==='Pengeluaran').length+' transaksi';
+    document.getElementById('monthlyIncome').textContent=formatRupiah(monthIncome);
+    document.getElementById('monthlyExpense').textContent=formatRupiah(monthExpense);
+
+    const total=monthIncome+monthExpense;
+    const incomePct=total ? (monthIncome/total)*100 : 50;
+    document.getElementById('monthlyIncomeBar').style.width=incomePct+'%';
+    document.getElementById('monthlyExpenseBar').style.width=(100-incomePct)+'%';
+    renderMiniBars('incomeMiniBars',getDailyTotals('Pemasukan'));
+    renderMiniBars('expenseMiniBars',getDailyTotals('Pengeluaran'));
+    renderTransactions();
+  }
+
+  function renderSummary(){
+    document.getElementById('saldo').textContent = formatRupiah(summary.saldo);
+
+    const now = new Date();
+    const month = now.getMonth();
+    const year = now.getFullYear();
+
+    const monthly = transactions.filter(t => {
+      if(!t.tanggal) return false;
+      const d = new Date(t.tanggal + 'T00:00:00');
+      return d.getMonth() === month && d.getFullYear() === year;
+    });
+
+    const income = monthly.filter(t=>t.jenis==='Pemasukan').reduce((s,t)=>s+Number(t.nominal||0),0);
+    const expense = monthly.filter(t=>t.jenis==='Pengeluaran').reduce((s,t)=>s+Number(t.nominal||0),0);
+    const net = income - expense;
+    const pct = income > 0 ? ((net / income) * 100) : 0;
+
+    document.getElementById('balanceChange').textContent =
+      `${pct >= 0 ? '+' : ''}${pct.toFixed(1)}% (Bulan ini)`;
+  }
+
+  function renderChart(){
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+
+    const monthly = transactions.filter(t => {
+      if(!t.tanggal) return false;
+      const d = new Date(t.tanggal + 'T00:00:00');
+      return d.getMonth() === month && d.getFullYear() === year;
+    });
+
+    const filtered = monthly.filter(t =>
+      chartMode === 'income' ? t.jenis === 'Pemasukan' : t.jenis === 'Pengeluaran'
+    );
+
+    const daily = {};
+    filtered.forEach(t => {
+      const d = new Date(t.tanggal + 'T00:00:00');
+      const day = d.getDate();
+      daily[day] = (daily[day] || 0) + Number(t.nominal || 0);
+    });
+
+    const max = Math.max(...Object.values(daily),1);
+    const daysInMonth = new Date(year,month+1,0).getDate();
+
+    // Tampilkan 7 titik hari terakhir yang memiliki rentang hari aktual.
+    const end = Math.min(new Date().getDate(), daysInMonth);
+    const start = Math.max(1,end-6);
+    const days = [];
+    for(let d=start; d<=end; d++) days.push(d);
+
+    const labels = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+    const bars = document.getElementById('bars');
+
+    bars.innerHTML = days.map(day => {
+      const value = daily[day] || 0;
+      const height = Math.max(7,(value/max)*80);
+      const date = new Date(year,month,day);
+      return `
+        <div class="bar-col">
+          <div class="bar" style="height:${height}px"></div>
+          <div class="bar-label">${labels[date.getDay()]}</div>
+        </div>
+      `;
+    }).join('');
+
+    const total = filtered.reduce((s,t)=>s+Number(t.nominal||0),0);
+    document.getElementById('chartTotal').textContent = formatRupiah(total);
+    document.getElementById('chartPeriod').textContent =
+      chartMode === 'income' ? 'Pemasukan • Bulan ini' : 'Pengeluaran • Bulan ini';
+  }
+
+  function renderTransactions(){
+    const el = document.getElementById('transactions');
+    const filtered = homeFilter === 'income'
+      ? transactions.filter(t=>t.jenis==='Pemasukan')
+      : homeFilter === 'expense'
+        ? transactions.filter(t=>t.jenis==='Pengeluaran')
+        : transactions;
+
+    const shown = filtered.slice(0,10);
+    const countLabel=document.getElementById('transactionCountLabel');
+    if(countLabel) countLabel.textContent = filtered.length ? `(${Math.min(filtered.length,10)} terbaru)` : '';
+
+    if(!shown.length){
+      el.innerHTML = '<div class="empty">Belum ada transaksi.</div>';
+      return;
+    }
+
+    el.innerHTML = shown.map(t => {
+      const income = t.jenis === 'Pemasukan';
+      const sign = income ? '+' : '-';
+      const iconClass = income ? 'income' : 'expense';
+      return `
+        <article class="transaction home-transaction ${iconClass}">
+          <div class="tx-icon ${iconClass}">${getIcon(t.kategori)}</div>
+          <div class="tx-main">
+            <div class="tx-name">${escapeHtml(t.kategori || 'Transaksi')}</div>
+            <div class="tx-date">${formatDate(t.tanggal)}${t.metode ? ' • ' + escapeHtml(t.metode) : ''}</div>
+            ${t.catatan ? `<div class="tx-date">${escapeHtml(t.catatan)}</div>` : ''}
+          </div>
+          <div class="tx-right">
+            <div class="tx-amount ${iconClass}">${sign}${formatRupiah(t.nominal)}</div>
+            <div class="tx-actions">
+              <button class="mini-btn" onclick="editTransaction('${escapeJs(t.id)}')">Edit</button>
+              <button class="mini-btn" onclick="deleteTransaction('${escapeJs(t.id)}')">Hapus</button>
+            </div>
+          </div>
+        </article>`;
+    }).join('');
+  }
+
+  function scrollHome(){
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function showToast(message){
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(window.toastTimer);
+    window.toastTimer = setTimeout(()=>toast.classList.remove('show'),2200);
+  }
+
+  // Refresh ringan: 30 detik, hanya jika halaman sedang aktif.
+  setInterval(() => {
+    if(document.visibilityState === 'visible') loadData(false);
+  }, 30000);
+
+  window.addEventListener('pageshow', () => {
+    if(Date.now() - lastLoadedAt > 20000) loadData(true);
+  });
+
+  // Tutup modal bila area gelap di luar sheet ditekan.
+  document.getElementById('modal').addEventListener('click', function(e){
+    if(e.target === this) closeForm();
+  });
+
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+  }
+</script>
+</body>
+</html>
