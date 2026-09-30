@@ -2513,9 +2513,131 @@
       .home-topbar{padding-top:0 !important;}
     }
 
+
+    /* V26: fixed bottom navigation + proportional iPhone typography */
+    @media (pointer:coarse){
+      .app{
+        padding-bottom:calc(112px + env(safe-area-inset-bottom)) !important;
+      }
+
+      /* Keep the navigation visible at the bottom while scrolling. */
+      .bottom-nav{
+        position:fixed !important;
+        left:50% !important;
+        right:auto !important;
+        bottom:calc(10px + env(safe-area-inset-bottom)) !important;
+        top:auto !important;
+        transform:translateX(-50%) !important;
+        width:calc(100% - 24px) !important;
+        max-width:760px !important;
+        height:78px !important;
+        min-height:78px !important;
+        margin:0 !important;
+        padding:8px 10px !important;
+        z-index:1000 !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:space-between !important;
+        gap:8px !important;
+        border:1px solid #27313d !important;
+        border-radius:22px !important;
+        background:rgba(9,13,19,.97) !important;
+        box-shadow:0 10px 30px rgba(0,0,0,.42) !important;
+        overflow:hidden !important;
+      }
+
+      .bottom-nav .nav-btn{
+        flex:0 0 76px !important;
+        width:76px !important;
+        min-width:76px !important;
+        max-width:76px !important;
+        height:60px !important;
+        min-height:60px !important;
+        padding:4px 2px !important;
+        gap:2px !important;
+        font-size:13px !important;
+        line-height:1.1 !important;
+      }
+      .bottom-nav .nav-icon{
+        font-size:27px !important;
+        line-height:27px !important;
+      }
+      .bottom-nav .add-nav{
+        flex:1 1 auto !important;
+        width:auto !important;
+        min-width:0 !important;
+        max-width:none !important;
+        height:52px !important;
+        min-height:52px !important;
+        padding:9px 12px !important;
+        border-radius:27px !important;
+        font-size:15px !important;
+        line-height:1.1 !important;
+        font-weight:650 !important;
+        white-space:nowrap !important;
+        overflow:hidden !important;
+        text-overflow:ellipsis !important;
+      }
+
+      .home-topbar{margin-bottom:18px !important;}
+      .home-brand{font-size:27px !important;line-height:1.08 !important;letter-spacing:-.65px !important;}
+      .home-tagline{font-size:15px !important;line-height:1.25 !important;margin-top:6px !important;}
+      .home-action{width:48px !important;height:48px !important;border-radius:15px !important;font-size:25px !important;}
+
+      .home-filter{border-radius:18px !important;padding:5px !important;margin-bottom:16px !important;gap:4px !important;}
+      .home-filter button{min-height:52px !important;font-size:16px !important;font-weight:650 !important;border-radius:13px !important;}
+
+      .summary-pair{gap:10px !important;}
+      .money-card{min-height:190px !important;padding:17px 15px 13px !important;border-radius:24px !important;}
+      .money-card-top{grid-template-columns:44px minmax(0,1fr) 14px !important;gap:8px !important;}
+      .money-icon{width:44px !important;height:44px !important;font-size:27px !important;}
+      .money-title{font-size:14px !important;line-height:1.2 !important;overflow:hidden !important;text-overflow:ellipsis !important;}
+      .money-arrow{font-size:22px !important;}
+      .money-value{font-size:25px !important;line-height:1.05 !important;margin-top:12px !important;}
+      .money-meta{font-size:13px !important;margin-top:7px !important;}
+
+      .home-balance-card{min-height:96px !important;padding:17px !important;border-radius:22px !important;}
+      .balance-icon{width:52px !important;height:52px !important;font-size:25px !important;border-radius:15px !important;}
+      .balance-copy .balance-label{font-size:16px !important;}
+      .balance-copy .balance{font-size:29px !important;line-height:1.05 !important;}
+      .balance-chevron{font-size:27px !important;}
+
+      .monthly-card{padding:19px 17px 17px !important;border-radius:24px !important;}
+      .monthly-head .section-title{font-size:20px !important;}
+      .monthly-head>span{font-size:14px !important;}
+      .monthly-values{gap:12px !important;}
+      .monthly-value{font-size:14px !important;line-height:1.15 !important;}
+      .monthly-value strong{font-size:18px !important;}
+
+      .home-section-title{font-size:23px !important;line-height:1.15 !important;margin:26px 2px 10px !important;}
+      .home-section-title span{font-size:13px !important;}
+      .home-transaction{min-height:82px !important;padding:14px 2px !important;gap:12px !important;}
+      .home-transaction .tx-name{font-size:17px !important;line-height:1.2 !important;}
+      .home-transaction .tx-date{font-size:13px !important;line-height:1.25 !important;}
+      .home-transaction .tx-amount{font-size:17px !important;line-height:1.1 !important;}
+      .home-transaction .mini-btn{font-size:13px !important;}
+    }
+
+    @media (max-width:390px){
+      .app{padding-left:14px !important;padding-right:14px !important;}
+      .home-brand{font-size:25px !important;}
+      .home-tagline{font-size:14px !important;}
+      .money-card{padding-left:13px !important;padding-right:13px !important;}
+      .money-value{font-size:23px !important;}
+      .money-title{font-size:13px !important;}
+      .balance-copy .balance{font-size:27px !important;}
+      .home-section-title{font-size:21px !important;}
+      .home-transaction .tx-name{font-size:16px !important;}
+      .home-transaction .tx-amount{font-size:16px !important;}
+      .bottom-nav{width:calc(100% - 18px) !important;padding-left:7px !important;padding-right:7px !important;}
+      .bottom-nav .nav-btn{flex-basis:70px !important;width:70px !important;min-width:70px !important;max-width:70px !important;font-size:12px !important;}
+      .bottom-nav .nav-icon{font-size:25px !important;}
+      .bottom-nav .add-nav{font-size:14px !important;padding-left:9px !important;padding-right:9px !important;}
+    }
+
 </style>
 
-  <!-- Keuangan Dani - V20 static web app -->
+  <!-- Keuangan Dani - V26 static web app -->
   <link rel="apple-touch-icon" sizes="180x180" href="icons/keuangan-dani-icon-180.png">
   <link rel="icon" type="image/png" sizes="180x180" href="icons/keuangan-dani-icon-180.png">
   <link rel="manifest" href="manifest.json">
