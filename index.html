@@ -787,7 +787,7 @@
     }
   
     /* =========================================================
-       iPhone UI V3 â larger native-app scale + lifted bottom nav
+       iPhone UI V3 - larger native-app scale + lifted bottom nav
        ========================================================= */
     @media (pointer:coarse){
       body{
@@ -1017,11 +1017,11 @@
       }
     }
 
-\n    /* =========================================================\n       iPhone FINAL â readable scale + no input auto-zoom + lifted nav\n       ========================================================= */\n    @media (pointer:coarse){\n      html, body{\n        -webkit-text-size-adjust:100% !important;\n        text-size-adjust:100% !important;\n        touch-action:manipulation;\n      }\n      input, textarea, select, button{\n        -webkit-tap-highlight-color:transparent;\n      }\n      input, textarea, select{\n        font-size:18px !important;\n      }\n\n      .app{\n        padding:24px 18px 145px !important;\n      }\n      .topbar{\n        min-height:70px !important;\n        margin:2px 0 20px !important;\n      }\n      .brand{font-size:23px !important;gap:13px !important;}\n      .brand-icon{width:42px !important;height:42px !important;font-size:21px !important;}\n      .date-label{font-size:17px !important;}\n\n      .balance-card{\n        padding:32px 24px 23px !important;\n        border-radius:24px !important;\n      }\n      .balance-label{font-size:18px !important;}\n      .balance{font-size:46px !important;letter-spacing:-1.4px !important;margin:8px 0 6px !important;}\n      .balance-change{font-size:17px !important;margin-bottom:17px !important;}\n      .segmented{padding:5px !important;border-radius:13px !important;}\n      .segmented button{min-height:52px !important;font-size:17px !important;border-radius:10px !important;}\n\n      .chart-card{\n        margin-top:15px !important;\n        min-height:215px !important;\n        padding:25px 22px 18px !important;\n        border-radius:24px !important;\n      }\n      .chart-head,.chart-amount{font-size:17px !important;}\n      .bars{height:128px !important;gap:10px !important;}\n      .bar-col{max-width:48px !important;gap:7px !important;}\n      .bar-label{font-size:12px !important;}\n\n      .section-title{font-size:24px !important;margin:30px 2px 14px !important;}\n      .transaction{gap:18px !important;padding:20px 4px !important;min-height:94px !important;}\n      .tx-icon{width:60px !important;height:60px !important;border-radius:17px !important;font-size:29px !important;}\n      .tx-name{font-size:20px !important;font-weight:500 !important;}\n      .tx-date{font-size:14px !important;margin-top:6px !important;}\n      .tx-amount{font-size:18px !important;font-weight:500 !important;}\n      .tx-actions{margin-top:8px !important;gap:10px !important;}\n      .mini-btn{font-size:14px !important;padding:4px 2px !important;}\n\n      /* Floating bottom bar: clearly lifted from the bottom edge. */\n      .bottom-nav{\n        left:14px !important;right:14px !important;bottom:18px !important;width:auto !important;\n        min-height:92px !important;padding:10px 14px !important;gap:10px !important;\n        border:1px solid #303b48 !important;border-radius:24px !important;\n        background:rgba(10,14,20,.98) !important;\n        box-shadow:0 10px 30px rgba(0,0,0,.50) !important;\n      }\n      .nav-btn{min-width:105px !important;min-height:70px !important;padding:7px 10px !important;gap:5px !important;font-size:16px !important;}\n      .nav-icon{font-size:38px !important;line-height:36px !important;}\n      .add-nav{min-height:62px !important;padding:14px 25px !important;border-radius:31px !important;font-size:18px !important;font-weight:600 !important;}\n\n      /* Form: large enough for touch, but input text stays >=16px to prevent iOS zoom. */\n      .sheet{max-height:96svh !important;padding:20px 22px calc(30px + env(safe-area-inset-bottom)) !important;border-radius:30px 30px 0 0 !important;}\n      .handle{width:52px !important;height:6px !important;margin-bottom:22px !important;}\n      .form-head{margin-bottom:20px !important;}\n      .form-title{font-size:25px !important;}\n      .close{width:44px !important;height:44px !important;font-size:20px !important;}\n      .field{margin-bottom:22px !important;}\n      .label{font-size:18px !important;margin-bottom:10px !important;}\n      .control{min-height:62px !important;padding:0 16px !important;font-size:18px !important;border-radius:13px !important;}\n      .type-switch{padding:5px !important;border-radius:13px !important;}\n      .type-switch button{min-height:56px !important;font-size:18px !important;border-radius:10px !important;}\n      .category-grid,.method-grid{grid-template-columns:repeat(3,minmax(0,1fr)) !important;gap:11px !important;}\n      .choice{min-height:82px !important;padding:9px 5px !important;border-radius:14px !important;gap:7px !important;font-size:15px !important;}\n      .choice .emoji{font-size:29px !important;}\n      #nominal{min-height:64px !important;font-size:18px !important;}\n      .money-prefix{top:19px !important;font-size:18px !important;}\n      textarea.control{min-height:120px !important;padding:15px 16px !important;font-size:18px !important;}\n      .save-btn{min-height:64px !important;font-size:19px !important;border-radius:15px !important;}\n      .cancel-edit{min-height:58px !important;font-size:18px !important;}\n      .toast{bottom:130px !important;font-size:17px !important;padding:15px 20px !important;}\n    }\n
+\n    /* =========================================================\n       iPhone FINAL - readable scale + no input auto-zoom + lifted nav\n       ========================================================= */\n    @media (pointer:coarse){\n      html, body{\n        -webkit-text-size-adjust:100% !important;\n        text-size-adjust:100% !important;\n        touch-action:manipulation;\n      }\n      input, textarea, select, button{\n        -webkit-tap-highlight-color:transparent;\n      }\n      input, textarea, select{\n        font-size:18px !important;\n      }\n\n      .app{\n        padding:24px 18px 145px !important;\n      }\n      .topbar{\n        min-height:70px !important;\n        margin:2px 0 20px !important;\n      }\n      .brand{font-size:23px !important;gap:13px !important;}\n      .brand-icon{width:42px !important;height:42px !important;font-size:21px !important;}\n      .date-label{font-size:17px !important;}\n\n      .balance-card{\n        padding:32px 24px 23px !important;\n        border-radius:24px !important;\n      }\n      .balance-label{font-size:18px !important;}\n      .balance{font-size:46px !important;letter-spacing:-1.4px !important;margin:8px 0 6px !important;}\n      .balance-change{font-size:17px !important;margin-bottom:17px !important;}\n      .segmented{padding:5px !important;border-radius:13px !important;}\n      .segmented button{min-height:52px !important;font-size:17px !important;border-radius:10px !important;}\n\n      .chart-card{\n        margin-top:15px !important;\n        min-height:215px !important;\n        padding:25px 22px 18px !important;\n        border-radius:24px !important;\n      }\n      .chart-head,.chart-amount{font-size:17px !important;}\n      .bars{height:128px !important;gap:10px !important;}\n      .bar-col{max-width:48px !important;gap:7px !important;}\n      .bar-label{font-size:12px !important;}\n\n      .section-title{font-size:24px !important;margin:30px 2px 14px !important;}\n      .transaction{gap:18px !important;padding:20px 4px !important;min-height:94px !important;}\n      .tx-icon{width:60px !important;height:60px !important;border-radius:17px !important;font-size:29px !important;}\n      .tx-name{font-size:20px !important;font-weight:500 !important;}\n      .tx-date{font-size:14px !important;margin-top:6px !important;}\n      .tx-amount{font-size:18px !important;font-weight:500 !important;}\n      .tx-actions{margin-top:8px !important;gap:10px !important;}\n      .mini-btn{font-size:14px !important;padding:4px 2px !important;}\n\n      /* Floating bottom bar: clearly lifted from the bottom edge. */\n      .bottom-nav{\n        left:14px !important;right:14px !important;bottom:18px !important;width:auto !important;\n        min-height:92px !important;padding:10px 14px !important;gap:10px !important;\n        border:1px solid #303b48 !important;border-radius:24px !important;\n        background:rgba(10,14,20,.98) !important;\n        box-shadow:0 10px 30px rgba(0,0,0,.50) !important;\n      }\n      .nav-btn{min-width:105px !important;min-height:70px !important;padding:7px 10px !important;gap:5px !important;font-size:16px !important;}\n      .nav-icon{font-size:38px !important;line-height:36px !important;}\n      .add-nav{min-height:62px !important;padding:14px 25px !important;border-radius:31px !important;font-size:18px !important;font-weight:600 !important;}\n\n      /* Form: large enough for touch, but input text stays >=16px to prevent iOS zoom. */\n      .sheet{max-height:96svh !important;padding:20px 22px calc(30px + env(safe-area-inset-bottom)) !important;border-radius:30px 30px 0 0 !important;}\n      .handle{width:52px !important;height:6px !important;margin-bottom:22px !important;}\n      .form-head{margin-bottom:20px !important;}\n      .form-title{font-size:25px !important;}\n      .close{width:44px !important;height:44px !important;font-size:20px !important;}\n      .field{margin-bottom:22px !important;}\n      .label{font-size:18px !important;margin-bottom:10px !important;}\n      .control{min-height:62px !important;padding:0 16px !important;font-size:18px !important;border-radius:13px !important;}\n      .type-switch{padding:5px !important;border-radius:13px !important;}\n      .type-switch button{min-height:56px !important;font-size:18px !important;border-radius:10px !important;}\n      .category-grid,.method-grid{grid-template-columns:repeat(3,minmax(0,1fr)) !important;gap:11px !important;}\n      .choice{min-height:82px !important;padding:9px 5px !important;border-radius:14px !important;gap:7px !important;font-size:15px !important;}\n      .choice .emoji{font-size:29px !important;}\n      #nominal{min-height:64px !important;font-size:18px !important;}\n      .money-prefix{top:19px !important;font-size:18px !important;}\n      textarea.control{min-height:120px !important;padding:15px 16px !important;font-size:18px !important;}\n      .save-btn{min-height:64px !important;font-size:19px !important;border-radius:15px !important;}\n      .cancel-edit{min-height:58px !important;font-size:18px !important;}\n      .toast{bottom:130px !important;font-size:17px !important;padding:15px 20px !important;}\n    }\n
 
 
     /* =========================================================
-       iPhone FINAL V5 â reference-scale UI
+       iPhone FINAL V5 - reference-scale UI
        Intentionally larger native-app proportions + higher bottom nav.
        ========================================================= */
     @media (pointer:coarse){
@@ -1267,7 +1267,7 @@
 
 
     /* =========================================================
-       iPhone V6 â SIGNIFICANTLY LARGER REFERENCE SCALE
+       iPhone V6 - SIGNIFICANTLY LARGER REFERENCE SCALE
        Final large-touch layout. Overrides previous coarse rules.
        ========================================================= */
     @media (pointer:coarse){
@@ -1522,7 +1522,7 @@
 
 
     /* =========================================================
-       iPhone V7 â XL REFERENCE SCALE
+       iPhone V7 - XL REFERENCE SCALE
        Significant enlargement. Designed to match the supplied
        native-iPhone reference proportions and touch targets.
        This block intentionally overrides all previous coarse rules.
@@ -1804,7 +1804,7 @@
 
 
     /* =========================================================
-       iPhone V8 â EXTRA LARGE / REFERENCE SCALE
+       iPhone V8 - EXTRA LARGE / REFERENCE SCALE
        Final aggressive readability pass.
        This intentionally overrides all previous touch/iPhone rules.
        ========================================================= */
@@ -1937,7 +1937,7 @@
         padding:5px 2px !important;
       }
 
-      /* BOTTOM NAV â lifted higher and very easy to tap */
+      /* BOTTOM NAV - lifted higher and very easy to tap */
       .bottom-nav{
         left:16px !important;
         right:16px !important;
@@ -2073,7 +2073,7 @@
 
 
     /* =========================================================
-       V14 â iPhone form architecture
+       V14 - iPhone form architecture
        ---------------------------------------------------------
        The home screen keeps the approved V8-scale styling.
        On touch devices the transaction form is no longer a
@@ -2205,7 +2205,7 @@
     }
 
     /* =========================================================
-       V17 â Clean outline SVG icons + extra-large transaction form
+       V17 - Clean outline SVG icons + extra-large transaction form
        ========================================================= */
     @media (pointer:coarse){
       .modal .sheet{
@@ -2318,7 +2318,7 @@
 
 
     /* =========================================================
-       V19 â Beranda income/expense visual + performance layer
+       V19 - Beranda income/expense visual + performance layer
        ========================================================= */
     :root{
       --income:#17b86a;
@@ -2395,28 +2395,69 @@
     }
 
 
-    /* =========================================================
-       V21 â Bottom navigation scrolls with the page
-       It no longer stays fixed over transaction content.
-       ========================================================= */
+    /* V22: bottom navigation is part of document flow on touch devices.
+       It scrolls with the page and must not cover transaction content. */
     @media (pointer:coarse){
-      .app{
-        padding-bottom:24px !important;
-      }
+      .app{padding-bottom:28px !important;}
       .bottom-nav{
         position:relative !important;
+        z-index:20 !important;
         left:auto !important;
         right:auto !important;
         top:auto !important;
         bottom:auto !important;
         transform:none !important;
-        width:calc(100% - 28px) !important;
-        margin:0 14px 18px !important;
+        width:100% !important;
+        margin:28px 0 8px !important;
+        min-height:78px !important;
+        height:auto !important;
+        padding:9px 10px !important;
+        gap:8px !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:space-between !important;
+        border:1px solid #303b48 !important;
+        border-radius:20px !important;
+        background:rgba(10,14,20,.98) !important;
+        box-shadow:0 8px 24px rgba(0,0,0,.32) !important;
+        backdrop-filter:none !important;
+        -webkit-backdrop-filter:none !important;
+      }
+      .bottom-nav .nav-btn{
+        min-width:78px !important;
+        width:78px !important;
+        min-height:58px !important;
+        height:58px !important;
+        padding:5px 4px !important;
+        gap:3px !important;
+        font-size:13px !important;
+        font-weight:500 !important;
+        line-height:1.1 !important;
+      }
+      .bottom-nav .nav-icon{
+        font-size:28px !important;
+        line-height:28px !important;
+      }
+      .bottom-nav .add-nav{
+        flex:1 1 auto !important;
+        min-width:0 !important;
+        width:auto !important;
+        min-height:52px !important;
+        height:52px !important;
+        padding:10px 14px !important;
+        border-radius:26px !important;
+        font-size:16px !important;
+        line-height:1.1 !important;
+        font-weight:600 !important;
+        white-space:nowrap !important;
+        overflow:hidden !important;
+        text-overflow:ellipsis !important;
       }
     }
+
 </style>
 
-  <!-- Keuangan Dani â V20 static web app -->
+  <!-- Keuangan Dani - V20 static web app -->
   <link rel="apple-touch-icon" sizes="180x180" href="icons/keuangan-dani-icon-180.png">
   <link rel="icon" type="image/png" sizes="180x180" href="icons/keuangan-dani-icon-180.png">
   <link rel="manifest" href="manifest.json">
@@ -2441,11 +2482,11 @@
   <header class="topbar home-topbar">
     <div>
       <div class="home-brand">Keuangan Dani</div>
-      <div class="home-tagline">Catat â¢ Kelola â¢ Capai</div>
+      <div class="home-tagline">Catat &bull; Kelola &bull; Capai</div>
     </div>
     <div class="home-actions">
-      <button class="home-action" aria-label="Cari">â</button>
-      <button class="home-action" aria-label="Tanggal">â£</button>
+      <button class="home-action" aria-label="Cari">&#8981;</button>
+      <button class="home-action" aria-label="Tanggal">&#9635;</button>
     </div>
   </header>
 
@@ -2458,9 +2499,9 @@
   <section class="summary-pair" aria-label="Ringkasan pemasukan dan pengeluaran">
     <article class="money-card income-card">
       <div class="money-card-top">
-        <div class="money-icon income-icon">â</div>
+        <div class="money-icon income-icon">&uarr;</div>
         <div class="money-title">Total Pemasukan</div>
-        <span class="money-arrow">âº</span>
+        <span class="money-arrow">&rsaquo;</span>
       </div>
       <div class="money-value" id="homeIncome">Rp 0</div>
       <div class="money-meta" id="homeIncomeCount">0 transaksi</div>
@@ -2469,9 +2510,9 @@
 
     <article class="money-card expense-card">
       <div class="money-card-top">
-        <div class="money-icon expense-icon">â</div>
+        <div class="money-icon expense-icon">&darr;</div>
         <div class="money-title">Total Pengeluaran</div>
-        <span class="money-arrow">âº</span>
+        <span class="money-arrow">&rsaquo;</span>
       </div>
       <div class="money-value" id="homeExpense">Rp 0</div>
       <div class="money-meta" id="homeExpenseCount">0 transaksi</div>
@@ -2480,18 +2521,18 @@
   </section>
 
   <section class="home-balance-card">
-    <div class="balance-icon">â£</div>
+    <div class="balance-icon">&#9635;</div>
     <div class="balance-copy">
       <div class="balance-label">Saldo Saat Ini</div>
       <div class="balance" id="saldo">Rp 0</div>
     </div>
-    <div class="balance-chevron">âº</div>
+    <div class="balance-chevron">&rsaquo;</div>
   </section>
 
   <section class="monthly-card">
     <div class="monthly-head">
       <div class="section-title compact">Ringkasan Bulan Ini</div>
-      <span id="monthlyDetail">Detail âº</span>
+      <span id="monthlyDetail">Detail &rsaquo;</span>
     </div>
     <div class="monthly-bar" aria-hidden="true">
       <div id="monthlyIncomeBar"></div><div id="monthlyExpenseBar"></div>
@@ -2517,14 +2558,14 @@
 
 <nav class="bottom-nav">
   <button class="nav-btn active" onclick="scrollHome()">
-    <span class="nav-icon">â</span>
+    <span class="nav-icon">&#8962;</span>
     <span>Beranda</span>
   </button>
 
-  <button class="add-nav" onclick="openForm()">ï¼ Tambah Transaksi</button>
+  <button class="add-nav" onclick="openForm()">+ Tambah Transaksi</button>
 
   <button class="nav-btn" onclick="refreshAll()">
-    <span class="nav-icon">â»</span>
+    <span class="nav-icon">&#8635;</span>
     <span>Refresh</span>
   </button>
 </nav>
@@ -2536,7 +2577,7 @@
 
     <div class="form-head">
       <div class="form-title" id="formTitle">TAMBAH TRANSAKSI</div>
-      <button class="close" onclick="closeForm()">â</button>
+      <button class="close" onclick="closeForm()">&times;</button>
     </div>
 
     <div class="field">
@@ -2595,7 +2636,7 @@
   let editingId = null;
 
   // Harus sama persis dengan pilihan pada Shortcut iPhone.
-  // Ikon minimalis berbasis SVG â lebih konsisten dan bersih daripada emoji.
+  // Ikon minimalis berbasis SVG - lebih konsisten dan bersih daripada emoji.
   const expenseCategories = [
     ['Makanan & Minuman','food'],
     ['Transportasi','car'],
@@ -3092,7 +3133,7 @@
     const total = filtered.reduce((s,t)=>s+Number(t.nominal||0),0);
     document.getElementById('chartTotal').textContent = formatRupiah(total);
     document.getElementById('chartPeriod').textContent =
-      chartMode === 'income' ? 'Pemasukan â¢ Bulan ini' : 'Pengeluaran â¢ Bulan ini';
+      chartMode === 'income' ? 'Pemasukan \u2022 Bulan ini' : 'Pengeluaran \u2022 Bulan ini';
   }
 
   function renderTransactions(){
@@ -3121,7 +3162,7 @@
           <div class="tx-icon ${iconClass}">${getIcon(t.kategori)}</div>
           <div class="tx-main">
             <div class="tx-name">${escapeHtml(t.kategori || 'Transaksi')}</div>
-            <div class="tx-date">${formatDate(t.tanggal)}${t.metode ? ' â¢ ' + escapeHtml(t.metode) : ''}</div>
+            <div class="tx-date">${formatDate(t.tanggal)}${t.metode ? ' \u2022 ' + escapeHtml(t.metode) : ''}</div>
             ${t.catatan ? `<div class="tx-date">${escapeHtml(t.catatan)}</div>` : ''}
           </div>
           <div class="tx-right">
