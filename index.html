@@ -2345,11 +2345,11 @@
     .money-card:after{content:"";position:absolute;left:-8%;right:-8%;bottom:-22px;height:65px;border-radius:50% 50% 0 0;border-top:3px solid rgba(255,255,255,.38);opacity:.7;transform:rotate(-3deg)}
     .income-card{background:linear-gradient(145deg,#087744 0%,#07562f 52%,#062b21 100%)}
     .expense-card{background:linear-gradient(145deg,#8b121c 0%,#5b0d15 52%,#2d0b12 100%)}
-    .money-card-top{display:grid;grid-template-columns:44px 1fr 18px;align-items:center;gap:9px;position:relative;z-index:1}
-    .money-icon{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:28px;font-weight:800;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18)}
+    .money-card-top{display:grid;grid-template-columns:42px minmax(0,1fr) 18px;align-items:center;gap:8px;position:relative;z-index:1}
+    .money-icon{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-size:27px;font-weight:800;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);flex:none}
     .income-icon{background:rgba(22,214,126,.72)} .expense-icon{background:rgba(255,44,55,.82)}
-    .money-title{font-size:14px;font-weight:600;white-space:nowrap}
-    .money-arrow{font-size:26px;opacity:.9;text-align:right}
+    .money-title{min-width:0;font-size:13px;line-height:1.15;font-weight:650;white-space:normal;overflow:visible;display:block}
+    .money-arrow{font-size:25px;opacity:.9;text-align:right}
     .money-value{position:relative;z-index:1;margin-top:13px;font-size:25px;line-height:1.05;font-weight:780;letter-spacing:-.7px;white-space:nowrap}
     .money-meta{position:relative;z-index:1;margin-top:7px;font-size:13px;color:rgba(255,255,255,.78)}
     .mini-bars{position:absolute;left:15px;right:15px;bottom:12px;height:50px;display:flex;align-items:flex-end;gap:5px;z-index:1;opacity:.45}
@@ -2392,7 +2392,7 @@
     }
 
     @media (max-width:430px){
-      .money-value{font-size:22px !important}.money-title{font-size:13px !important}.money-card{min-height:190px !important}.money-card-top{gap:7px !important}.money-icon{width:42px !important;height:42px !important;font-size:27px !important}.summary-pair{gap:8px !important}.monthly-values{gap:8px !important}
+      .money-value{font-size:22px !important}.money-title{font-size:12px !important;line-height:1.15 !important;white-space:normal !important}.money-card{min-height:190px !important}.money-card-top{grid-template-columns:40px minmax(0,1fr) 16px !important;gap:6px !important}.money-icon{width:40px !important;height:40px !important;font-size:25px !important}.money-arrow{font-size:23px !important}.summary-pair{gap:8px !important}.monthly-values{gap:8px !important}
     }
 
 
@@ -2635,6 +2635,12 @@
       .bottom-nav .add-nav{font-size:14px !important;padding-left:9px !important;padding-right:9px !important;}
     }
 
+
+    /* V27: show full income/expense card labels on narrow iPhone widths. */
+    @media (pointer:coarse){
+      .money-card-top{grid-template-columns:40px minmax(0,1fr) 16px !important;gap:6px !important;}
+      .money-title{font-size:12px !important;line-height:1.12 !important;white-space:normal !important;overflow:visible !important;text-overflow:clip !important;}
+    }
 </style>
 
   <!-- Keuangan Dani - V26 static web app -->
